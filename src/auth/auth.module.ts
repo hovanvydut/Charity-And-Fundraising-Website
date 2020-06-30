@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy } from './other/local.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { SessionSerializer } from './session.serializer';
+import { SessionSerializer } from './other/session.serializer';
 
 @Module({
   imports: [UserModule, PassportModule],

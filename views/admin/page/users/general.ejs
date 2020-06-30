@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <base href="/public/admin/">
+  <title>Admin</title>
+  <%- include('./../../partials/header') -%>
+
+</head>
+
+<body>
+
+  <!-- Begin page -->
+  <div id="wrapper">
+
+
+    <!-- Topbar Start -->
+    <%- include('./../../component/Topbar', {user}); -%>
+    <!-- end Topbar -->
+    <!-- ========== Left Sidebar Start ========== -->
+    <%- include('./../../component/Leftbar'); -%>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+          <!-- start page title -->
+          <div class="row">
+            <div class="col-12">
+              <div class="page-title-box">
+                <h4 class="page-title">Quản lý thành viên</h4>
+                <div class="page-title-right">
+                  <ol class="breadcrumb p-0 m-0">
+                    <li class="breadcrumb-item"><a href="#">Velonic</a></li>
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Dashboard 1</li>
+                  </ol>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <!-- end page title -->
+
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex">
+                    <div class="w-50">
+                      <h4 class="header-title mb-4">Tất cả thành viên</h4>
+                    </div>
+                    <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
+                      <i style="padding: 0 10px; cursor: pointer" class="ion ion-md-person-add" data-toggle="modal"
+                        data-target="#addGeneralUser"></i>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table mb-0">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>First Name</th>
+                          <th>Last Name</th>
+                          <th>Username</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>Mark</td>
+                          <td>Otto</td>
+                          <td>@mdo</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>Jacob</td>
+                          <td>Thornton</td>
+                          <td>@fat</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td>Larry</td>
+                          <td>the Bird</td>
+                          <td>@twitter</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end container-fluid -->
+
+      </div>
+      <!-- end content -->
+
+      <%- include('./partials/modal_add_user.ejs') -%>
+
+
+      <!-- Footer Start -->
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              2015 - 2020 &copy; Velonic theme by <a href="">Coderthemes</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+  </div>
+  <!-- END wrapper -->
+
+
+  <!-- Right Sidebar -->
+  <%- include('./../../component/Rightbar'); -%>
+  <!-- /Right-bar -->
+
+  <%- include('./../../partials/script_footer') -%>
+  <script src="assets\js\pages\form-validation.init.js"></script>
+  <script src="assets\libs\parsleyjs\parsley2.min.js"></script>
+  <script>
+    window.ParsleyValidator
+      .addValidator('urlstrict', function (value, requirement) {
+        var regExp =
+          /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+
+        return '' !== value ? regExp.test(value) : false;
+      }, 32)
+      .addMessage('en', 'urlstrict', 'Must be a valid strict URL');
+
+    document.getElementById('addUserSubmitBtn').addEventListener('click', async (event) => {
+      const form = document.forms.addUserForm;
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('fullname'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        phone: formData.get('phone'),
+      }
+      if (formData.get('address')) data.address = formData.get('address');
+      if (formData.get('avatar')) data.avatar = formData.get('avatar');
+      try {
+        await axios({
+          method: 'POST',
+          url: '/admin/users',
+          data
+        })
+        swal("Thành công", "", "success");
+      } catch (error) {
+        swal("Lỗi!", "Dữ liệu trong form không hợp lệ! Vui lòng thử lại", "error");
+      }
+
+    })
+  </script>
+</body>
+
+</html>

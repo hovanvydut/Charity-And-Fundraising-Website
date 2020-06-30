@@ -1,0 +1,62 @@
+<div id="addGeneralUser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  style="display: none;" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Thêm người dùng mới</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="addUserForm" data-parsley-validate="" class="parsley-examples" method="POST" action="/admin/users"
+          novalidate="">
+          <div class="form-group">
+            <label for="fullName">Họ tên<span class="text-danger">*</span></label>
+            <input name="fullname" type="text" data-parsley-trigger="input" data-parsley-required="true" required=""
+              class="form-control" id="fullName">
+          </div>
+          <div class="form-group">
+            <label for="emailAddress">Email<span class="text-danger">*</span></label>
+            <input type="email" name="email" data-parsley-trigger="change" required="" class="form-control"
+              id="emailAddress">
+          </div>
+          <div class="form-group">
+            <label for="password">Mật khẩu<span class="text-danger">*</span></label>
+            <input name="password" id="password" type="password" placeholder="Mật khẩu phải có ít nhất 6 kí tự"
+              required="" class="form-control" data-parsley-trigger="change" data-parsley-minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="passWord2">Nhập lại mật khẩu<span class="text-danger">*</span></label>
+            <input data-parsley-trigger="change" data-parsley-equalto="#password" type="password" required=""
+              class="form-control" id="passWord2">
+          </div>
+          <div class="form-group">
+            <label for="phone">Số điện thoại<span class="text-danger">*</span></label>
+            <input name="phone" type="number" data-parsley-trigger="change" required="" class="form-control" id="phone">
+          </div>
+          <div class="form-group">
+            <label for="address">Địa chỉ liên hệ</label>
+            <input name="address" type="text" data-parsley-trigger="change" class="form-control" id="address">
+          </div>
+          <div class="form-group">
+            <label for="avatar">Ảnh đại diện</label>
+            <input name="avatar" type="text" data-parsley-urlstric data-parsley-trigger="change" placeholder="Link ảnh"
+              class="form-control" id="avatar">
+          </div>
+          <div class="form-group text-right mb-0">
+            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+            <button type="reset" class="btn btn-secondary waves-effect waves-light">
+              Reset
+            </button>
+            <button id="addUserSubmitBtn" class="btn btn-primary waves-effect waves-light mr-1" type="button">
+              Submit
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

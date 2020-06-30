@@ -22,6 +22,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
       // request.flash('loginError', 'Please try again!');
       response.redirect('/admin/auth/login');
     } else {
+      console.log(exception);
       response.redirect('/admin/error');
     }
   }
