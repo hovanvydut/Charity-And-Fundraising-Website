@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   Unique,
 } from 'typeorm';
+import { randomAvatar } from './other/random_avatar';
 
 @Entity()
 export class User {
@@ -21,13 +22,13 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   phone: string;
 
   @Column()
   address: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: randomAvatar() })
   avatar: string;
 
   @Column()

@@ -1,10 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-function matchRoles(roles: number[], roleOfUser) {
-  return roles.includes(roleOfUser);
-}
-
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -16,6 +12,10 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    return matchRoles(roles, user.roles);
+    return this.matchRoles(roles, user.role);
+  }
+
+  matchRoles(roles: number[], roleOfUser) {
+    return roles.includes(roleOfUser);
   }
 }

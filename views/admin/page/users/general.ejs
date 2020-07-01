@@ -59,8 +59,8 @@
                       <h4 class="header-title mb-4">Tất cả thành viên</h4>
                     </div>
                     <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
-                      <i style="padding: 0 10px; cursor: pointer" class="ion ion-md-person-add" data-toggle="modal"
-                        data-target="#addGeneralUser"></i>
+                      <a href="/admin/manageusers/create-user"><i style="padding: 0 10px; cursor: pointer"
+                          class="ion ion-md-person-add"></i></a>
                     </div>
                   </div>
                   <div class="table-responsive">
@@ -68,30 +68,25 @@
                       <thead class="thead-light">
                         <tr>
                           <th>#</th>
-                          <th>First Name</th>
-                          <th>Last Name</th>
-                          <th>Username</th>
+                          <th>Tên</th>
+                          <th>Vai trò</th>
+                          <th>Email</th>
+                          <th>Điện thoại</th>
+                          <th>Địa chỉ</th>
                         </tr>
                       </thead>
                       <tbody>
+                        <%- include('./partials/convertRoleUser') -%>
+                        <% userList ? userList.forEach((user, index) => { %>
                         <tr>
-                          <th scope="row">1</th>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
+                          <th scope="row"><%= index + 1%></th>
+                          <td><a href="/admin/manageusers/<%= user.id %>/edit"><%= user.name %></a></td>
+                          <td><%= converRoleUserToString(user.role) %></td>
+                          <td><%= user.email %></td>
+                          <td><%= user.phone %></td>
+                          <td><%= user.address %></td>
                         </tr>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Larry</td>
-                          <td>the Bird</td>
-                          <td>@twitter</td>
-                        </tr>
+                        <%}) : null%>
                       </tbody>
                     </table>
                   </div>
