@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { randomAvatar } from './other/random_avatar';
+import { Article } from 'src/blog/article.entity';
 
 @Entity()
 export class User {
@@ -39,4 +42,10 @@ export class User {
 
   @UpdateDateColumn()
   last_updated: Date;
+
+  @OneToMany(
+    type => Article,
+    article => article.author,
+  )
+  article: Article[];
 }

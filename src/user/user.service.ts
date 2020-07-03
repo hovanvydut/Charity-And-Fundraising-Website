@@ -13,7 +13,6 @@ import { UpdateUserDto } from './dto/update_user.dto';
 
 @Injectable()
 export class UserService {
-  private readonly users: User[];
   private logger = new Logger();
   constructor(@InjectRepository(User) private userRepository: UserRepository) {}
 
@@ -22,7 +21,7 @@ export class UserService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt();
     createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
     try {
       await this.userRepository.insert(createUserDto);
@@ -48,5 +47,9 @@ export class UserService {
 
   updateUser(id: number, updateUserDto: UpdateUserDto) {
     return this.userRepository.update({ id }, updateUserDto);
+  }
+
+  deleteUser(id: number) {
+    return this.userRepository.deleteById(id);
   }
 }

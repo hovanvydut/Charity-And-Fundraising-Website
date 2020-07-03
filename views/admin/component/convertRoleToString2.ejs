@@ -1,0 +1,16 @@
+<%
+converRoleUserToString = function converRoleUserToString(role = '') {
+  switch(role) {
+    case 1: 
+      return 'ADMIN';
+    case 2:
+      return 'MOD';
+    case 3: 
+      return 'Tình nguyện viên';
+    case 4: 
+      return 'Nhà tài trợ';
+    default:
+      return ''
+  }
+}
+%>

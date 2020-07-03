@@ -5,11 +5,14 @@ import {
   ArgumentsHost,
   UnauthorizedException,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch(HttpException)
 export class AuthExceptionFilter implements ExceptionFilter {
+  private logger = new Logger();
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -20,9 +23,10 @@ export class AuthExceptionFilter implements ExceptionFilter {
       exception instanceof ForbiddenException
     ) {
       // request.flash('loginError', 'Please try again!');
+      this.logger.error(exception, null, 'AuthExceptionFilter');
       response.redirect('/admin/auth/login');
     } else {
-      console.log(exception);
+      this.logger.error(exception, null, 'AuthExceptionFilter');
       response.redirect('/admin/error');
     }
   }

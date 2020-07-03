@@ -1,9 +1,11 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 import { ClientModule } from './client/client.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SessionModule } from './session/session.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     UserModule,
     AdminModule,
     ClientModule,
+    SessionModule,
+    BlogModule,
   ],
 })
 export class AppModule {}

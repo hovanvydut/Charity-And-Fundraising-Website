@@ -7,11 +7,14 @@ import {
   UseGuards,
   Redirect,
   Req,
+  UseFilters,
 } from '@nestjs/common';
 import { LoginGuard } from './guard/login.guard';
 import { AuthenticatedGuard } from './guard/authenticated.guard';
+import { AuthExceptionFilter } from './filter/auth_exceptions.filter';
 
 @Controller('admin/auth')
+@UseFilters(AuthExceptionFilter)
 export class AuthController {
   private logger = new Logger();
 

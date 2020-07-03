@@ -37,7 +37,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsIn(
     Object.keys(RoleEnum)
-      .filter(value => Number(value))
+      .filter(value => Number(value) && Number(value) != RoleEnum.ADMIN)
       .map(value => Number(value)),
   )
   role: number;

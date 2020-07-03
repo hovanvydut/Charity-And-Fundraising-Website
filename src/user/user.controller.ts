@@ -12,6 +12,7 @@ import {
   ParseIntPipe,
   Patch,
   Redirect,
+  Delete,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
 import { CreateUserExceptionFilter } from './filter/create_user.exception.filter';
@@ -23,13 +24,18 @@ import { RoleEnum } from './other/user_role.enum';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { UpdateUserDto } from './dto/update_user.dto';
 import { AuthExceptionFilter } from 'src/auth/filter/auth_exceptions.filter';
+import { UpdateUserValidationPipe } from './pipe/update_user.validation.pipe';
+import { SessionService } from 'src/session/session.service';
 
 @Controller('admin/manageusers')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
-@UseFilters(AuthExceptionFilter)
 @UseGuards(AuthenticatedGuard, RolesGuard)
+@UseFilters(AuthExceptionFilter)
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private sessionService: SessionService,
+  ) {}
 
   @Get('/general')
   @Render('admin/page/users/general')
@@ -82,11 +88,18 @@ export class UserController {
   @Patch('/:id/edit')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(new UpdateUserValidationPipe()) updateUserDto: UpdateUserDto,
     @Res() res,
     @Req() req,
   ) {
     await this.userService.updateUser(id, updateUserDto);
+    await this.sessionService.destroyByUserId(id);
     return res.redirect(`/admin/manageusers/${id}/edit`);
+  }
+
+  @Delete('/:id/delete')
+  @Redirect('/admin/manageusers/general')
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    await this.userService.deleteUser(id);
   }
 }
