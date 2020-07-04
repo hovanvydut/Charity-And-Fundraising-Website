@@ -22,7 +22,6 @@ export class AuthExceptionFilter implements ExceptionFilter {
       exception instanceof UnauthorizedException ||
       exception instanceof ForbiddenException
     ) {
-      // request.flash('loginError', 'Please try again!');
       this.logger.error(exception, null, 'AuthExceptionFilter');
       response.redirect('/admin/auth/login');
     } else {

@@ -6,6 +6,7 @@
   <base href="/public/admin/">
   <title>Admin</title>
   <%- include('./../../partials/header') -%>
+  <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -59,8 +60,8 @@
                       <h4 class="header-title mb-4">Tất cả thành viên</h4>
                     </div>
                     <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
-                      <a href="/admin/manageusers/create-user"><i style="padding: 0 10px; cursor: pointer"
-                          class="ion ion-md-person-add"></i></a>
+                      <a href="/admin/blog/write-article"><i style="padding: 0 10px; cursor: pointer"
+                          class="ion ion-md-add"></i></a>
                     </div>
                   </div>
                   <div class="table-responsive">
@@ -125,39 +126,32 @@
   <%- include('./../../partials/script_footer') -%>
   <script src="assets\js\pages\form-validation.init.js"></script>
   <script src="assets\libs\parsleyjs\parsley2.min.js"></script>
+  <script src="assets\libs\toastr\toastr.min.js"></script>
   <script>
-    window.ParsleyValidator
-      .addValidator('urlstrict', function (value, requirement) {
-        var regExp =
-          /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
-
-        return '' !== value ? regExp.test(value) : false;
-      }, 32)
-      .addMessage('en', 'urlstrict', 'Must be a valid strict URL');
-
-    document.getElementById('addUserSubmitBtn').addEventListener('click', async (event) => {
-      const form = document.forms.addUserForm;
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('fullname'),
-        email: formData.get('email'),
-        password: formData.get('password'),
-        phone: formData.get('phone'),
-      }
-      if (formData.get('address')) data.address = formData.get('address');
-      if (formData.get('avatar')) data.avatar = formData.get('avatar');
-      try {
-        await axios({
-          method: 'POST',
-          url: '/admin/users',
-          data
-        })
-        swal("Thành công", "", "success");
-      } catch (error) {
-        swal("Lỗi!", "Dữ liệu trong form không hợp lệ! Vui lòng thử lại", "error");
-      }
-
-    })
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+    try {
+      const status = "<%- message ? message.status : '' %>";
+      const contentArr = "<%- message ? message.contents : '' %>";
+      contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
+    } catch (err) {
+      console.log(err);
+    }
   </script>
 </body>
 
