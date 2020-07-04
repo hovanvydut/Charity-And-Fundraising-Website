@@ -13,6 +13,7 @@ import {
   Patch,
   Redirect,
   Delete,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
 import { CreateUserExceptionFilter } from './filter/create_user.exception.filter';
@@ -26,6 +27,8 @@ import { UpdateUserDto } from './dto/update_user.dto';
 import { AuthExceptionFilter } from 'src/auth/filter/auth_exceptions.filter';
 import { UpdateUserValidationPipe } from './pipe/update_user.validation.pipe';
 import { SessionService } from 'src/session/session.service';
+import { GetUser } from './other/get_user.decorator';
+import { User } from './user.entity';
 
 @Controller('admin/manageusers')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
@@ -40,10 +43,14 @@ export class UserController {
   @Get('/general')
   @Render('admin/page/users/general')
   async generalUser(@Req() req) {
+    const messageFlash = req.flash('message');
     const userList = await this.userService.getUsers();
     return {
       user: req.user,
-      message: { status: 'error', contents: req.flash('error') },
+      message: {
+        status: messageFlash[0],
+        contents: messageFlash.slice(1),
+      },
       userList,
     };
   }
@@ -51,11 +58,12 @@ export class UserController {
   @Get('/create-user')
   @Render('admin/page/users/create_user')
   createUserPage(@Req() req) {
+    const messageFlash = req.flash('message');
     return {
       user: req.user,
       message: {
-        status: 'error',
-        contents: req.flash('error'),
+        status: messageFlash[0],
+        contents: messageFlash.slice(1),
       },
       formData: req.flash('formData')[0],
     };
@@ -65,14 +73,16 @@ export class UserController {
   @UseFilters(CreateUserExceptionFilter)
   async createUser(
     @Body(new CreateUserValidationPipe()) createUserDto: CreateUserDto,
+    @GetUser() currentUser: User,
     @Req() req,
     @Res() res,
   ) {
     try {
-      await this.userService.createUser(createUserDto);
+      await this.userService.createUser(createUserDto, currentUser);
+      req.flash('message', ['success', 'Tạo người dùng thành công']);
       return res.redirect('general');
     } catch (error) {
-      req.flash('error', error.message);
+      req.flash('message', ['error', error.message]);
       req.flash('formData', createUserDto);
       return res.redirect('create-user');
     }
@@ -81,8 +91,16 @@ export class UserController {
   @Get('/:id/edit')
   @Render('admin/page/users/edit_user')
   async editUser(@Param('id', ParseIntPipe) id: number, @Req() req) {
+    const messageFlash = req.flash('message');
     const userData = await this.userService.findOne({ id });
-    return { user: req.user, userData, message: {} };
+    return {
+      user: req.user,
+      userData,
+      message: {
+        status: messageFlash[0],
+        contents: messageFlash.slice(1),
+      },
+    };
   }
 
   @Patch('/:id/edit')
@@ -91,15 +109,43 @@ export class UserController {
     @Body(new UpdateUserValidationPipe()) updateUserDto: UpdateUserDto,
     @Res() res,
     @Req() req,
+    @GetUser() currentUser: User,
   ) {
-    await this.userService.updateUser(id, updateUserDto);
-    await this.sessionService.destroyByUserId(id);
-    return res.redirect(`/admin/manageusers/${id}/edit`);
+    try {
+      await this.userService.updateUser(id, updateUserDto, currentUser);
+      if (currentUser.id === id)
+        req.session.passport.user = {
+          ...req.session.passport.user,
+          ...updateUserDto,
+        };
+      req.session.save(function(error) {
+        !error
+          ? req.flash('message', ['success', 'Cập nhật thành công'])
+          : req.flash('message', ['error', error.message]);
+
+        return res.redirect(`/admin/manageusers/${id}/edit`);
+      });
+    } catch (error) {
+      req.flash('message', ['error', error.message]);
+      return res.redirect(`/admin/manageusers/${id}/edit`);
+    }
   }
 
   @Delete('/:id/delete')
-  @Redirect('/admin/manageusers/general')
-  async deleteUser(@Param('id', ParseIntPipe) id: number) {
-    await this.userService.deleteUser(id);
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() currentUSer: User,
+    @Res() res,
+    @Req() req,
+  ) {
+    try {
+      await this.userService.deleteUser(id, currentUSer);
+      await this.sessionService.destroyByUserId(id);
+      req.flash('message', ['success', 'Xóa thành công']);
+      return res.redirect('/admin/manageusers/general');
+    } catch (error) {
+      req.flash('message', ['error', error.message]);
+      return res.redirect(`/admin/manageusers/${id}/edit`);
+    }
   }
 }

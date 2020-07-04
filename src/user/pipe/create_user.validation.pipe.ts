@@ -16,8 +16,11 @@ export class CreateUserValidationPipe implements PipeTransform<any> {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
+
     value.role = Number(value.role);
+
     if (!value.avatar) delete value.avatar;
+
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {

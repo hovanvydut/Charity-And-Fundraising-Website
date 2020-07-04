@@ -25,7 +25,7 @@ async function bootstrap() {
         conString: connectDBString,
       }),
       secret: 'secretSession',
-      resave: false,
+      resave: true,
       saveUninitialized: false,
     }),
   );

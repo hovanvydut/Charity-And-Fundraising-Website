@@ -52,11 +52,10 @@
 
           <div class="row">
             <div class="col-lg-12">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="header-title mb-4"></h4>
-
-                  <form action="/admin/manageusers/create-user" method="POST" class="parsley-examples" novalidate="">
+              <form action="/admin/manageusers/create-user" method="POST" class="parsley-examples" novalidate="">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="header-title mb-4"></h4>
                     <div class="form-group row">
                       <label for="name" class="col-md-4 col-form-label">Tên<span class="text-danger">*</span></label>
                       <div class="col-md-7">
@@ -127,19 +126,21 @@
                         </select>
                       </div>
                     </div>
+                  </div>
+                  <div class="card-footer">
                     <div class=" form-group row mb-0">
-                      <div class="col-md-8 offset-md-4">
+                      <div class="col-md-8 offset-md-4 d-flex justify-content-center">
+                        <button type="reset" class="mr-3 btn btn-secondary waves-effect waves-light">
+                          Xóa
+                        </button>
                         <button type="submit" class="btn btn-primary waves-effect waves-light mr-1">
                           Tạo
                         </button>
-                        <button type="reset" class="btn btn-secondary waves-effect waves-light">
-                          Xóa
-                        </button>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
 

@@ -19,6 +19,9 @@ import { AuthExceptionFilter } from 'src/auth/filter/auth_exceptions.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateArticleDto } from './dto/create_article.dto';
 import { BlogService } from './blog.service';
+import { GetUser } from 'src/user/other/get_user.decorator';
+import { User } from 'src/user/user.entity';
+import { Article } from './article.entity';
 
 @Controller('admin/blog')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
@@ -28,15 +31,18 @@ export class BlogController {
   constructor(private blogService: BlogService) {}
   // ! chức năng xem tất cả bài viết chỉ dành cho admin(reflect override)
   // ! chức năng bài viết của bạn
+  // ! viet interceptor tra ve req.user kem
   @Get('articles')
   @Render('admin/page/blog/articles')
-  viewArticles(@Req() req) {
+  async viewArticles(@Req() req, @GetUser() user: User) {
+    const articles: Article[] = await this.blogService.getArticles();
     return {
-      user: req.user,
+      user,
       message: {
         status: 'error',
         contents: req.flash('error'),
       },
+      articles,
     };
   }
 
@@ -66,8 +72,11 @@ export class BlogController {
 
   @Post('write-article')
   @Redirect('/admin/blog/articles')
-  async saveArticle(@Body() createArticleDto: CreateArticleDto) {
-    await this.blogService.saveArticle(createArticleDto);
+  async saveArticle(
+    @Body() createArticleDto: CreateArticleDto,
+    @GetUser() user: User,
+  ) {
+    await this.blogService.saveArticle(createArticleDto, user);
   }
 
   @Post('upload-image')

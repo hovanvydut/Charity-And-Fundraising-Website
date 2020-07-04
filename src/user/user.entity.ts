@@ -47,5 +47,5 @@ export class User {
     type => Article,
     article => article.author,
   )
-  article: Article[];
+  articles: Article[];
 }

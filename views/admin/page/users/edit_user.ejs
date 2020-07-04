@@ -227,7 +227,9 @@
     try {
       const status = "<%- message ? message.status : '' %>";
       const contentArr = "<%- message ? message.contents : '' %>";
+      console.log(status);
       contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
+      console.log(contentArr)
     } catch (err) {
       console.log(err);
     }

@@ -4,10 +4,12 @@ import {
   ArgumentMetadata,
   BadRequestException,
   Logger,
+  ForbiddenException,
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { RoleEnum } from '../other/user_role.enum';
 
 @Injectable()
 export class UpdateUserValidationPipe implements PipeTransform<any> {
@@ -26,6 +28,7 @@ export class UpdateUserValidationPipe implements PipeTransform<any> {
     }
 
     value.role = Number(value.role);
+
     if (!value.avatar) delete value.avatar;
 
     const object = plainToClass(metatype, value);
