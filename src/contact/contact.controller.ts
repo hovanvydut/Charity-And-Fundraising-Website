@@ -12,7 +12,6 @@ export class ContactController {
     @Body(new ContactMessageValidationPipe())
     contactMessageDto: ContactMessageDto,
   ) {
-    console.log(contactMessageDto);
     return this.contactService.saveContactMessage(contactMessageDto);
   }
 
