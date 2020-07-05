@@ -59,7 +59,7 @@
                       value="<%= articleData ? articleData.title : ''%>">
                   </div>
                   <div class="card-body">
-                    <textarea name="content" class="editor" style="visibility: hidden">
+                    <textarea name="content" id="editor1" style="visibility: hidden">
                       <%= articleData ? articleData.content : null %>
                     </textarea>
                   </div>
@@ -90,7 +90,7 @@
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="mySmallModalLabel">Bạn có muốn xóa người dùng này</h5>
+                <h5 class="modal-title" id="mySmallModalLabel">Bạn có muốn xóa bài viết này</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
               </div>
               <div class="modal-footer">
@@ -158,69 +158,11 @@
       console.log(err);
     }
   </script>
-  <script src="ckeditor.js"></script>
+  <script src="ckeditor/ckeditor.js"></script>
   <script>
-    ClassicEditor
-      .create(document.querySelector('.editor'), {
-
-        toolbar: {
-          items: [
-            'undo',
-            'redo',
-            'highlight',
-            '|',
-            'bold',
-            'italic',
-            'link',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'indent',
-            'outdent',
-            '|',
-            'imageUpload',
-            'blockQuote',
-            'insertTable',
-            'mediaEmbed',
-            'exportPdf',
-            'fontSize',
-            'fontFamily',
-            'CKFinder'
-          ]
-        },
-        language: 'vi',
-        image: {
-          toolbar: [
-            'imageTextAlternative',
-            'imageStyle:full',
-            'imageStyle:side',
-            'linkImage'
-          ]
-        },
-        table: {
-          contentToolbar: [
-            'tableColumn',
-            'tableRow',
-            'mergeTableCells'
-          ]
-        },
-        licenseKey: '',
-        simpleUpload: {
-          // The URL that the images are uploaded to.
-          uploadUrl: '/admin/blog/upload-image',
-        }
-      })
-      .then(editor => {
-        window.editor = editor;
-      })
-      .catch(error => {
-        console.error('Oops, something gone wrong!');
-        console.error(
-          'Please, report the following error in the https://github.com/ckeditor/ckeditor5 with the build id and the error stack trace:'
-        );
-        console.warn('Build id: z6mgsklm5rql-3vm5qrnccg3z');
-        console.error(error);
-      });
+    // Replace the <textarea id="editor1"> with a CKEditor 4
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1');
   </script>
 </body>
 

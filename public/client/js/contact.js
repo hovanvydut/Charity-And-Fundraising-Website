@@ -1,85 +1,80 @@
-$(document).ready(function(){
-    
-    (function($) {
-        "use strict";
+$(document).ready(function() {
+  (function($) {
+    'use strict';
 
-    
-    jQuery.validator.addMethod('answercheck', function (value, element) {
-        return this.optional(element) || /^\bcat\b$/.test(value)
-    }, "type the correct answer -_-");
+    jQuery.validator.addMethod(
+      'answercheck',
+      function(value, element) {
+        return this.optional(element) || /^\bcat\b$/.test(value);
+      },
+      'type the correct answer -_-',
+    );
 
     // validate contactForm form
     $(function() {
-        $('#contactForm').validate({
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 2
-                },
-                subject: {
-                    required: true,
-                    minlength: 4
-                },
-                number: {
-                    required: true,
-                    minlength: 5
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-                message: {
-                    required: true,
-                    minlength: 20
-                }
+      $('#contactForm').validate({
+        rules: {
+          name: {
+            required: true,
+            minlength: 2,
+          },
+          subject: {
+            required: true,
+            minlength: 4,
+          },
+          info: {
+            required: true,
+            minlength: 5,
+          },
+          message: {
+            required: true,
+            minlength: 20,
+          },
+        },
+        messages: {
+          name: {
+            required: 'Uhm... chắc bạn quên tên rồi, hãy điền nhé',
+            minlength: 'Tên của bạn phải ít nhất 2 kí tự',
+          },
+          subject: {
+            required: 'Uhm... chắc bạn quên điền tiêu đề rồi, hãy điền nhé',
+            minlength: 'Tiêu đề phải có ít nhất 4 kí tự',
+          },
+          info: {
+            required:
+              'Uhm... chắc bạn quên điền thông tin liên hệ rồi, hãy điền nhé',
+            minlength: 'Thông tin phải có ít nhất 5 kí tự',
+          },
+          message: {
+            required: 'Uhm... chắc bạn quên điền tin nhắn rồi, hãy điền nhé',
+            minlength:
+              'Có ngắn quá không, hãy viết thêm để chúng tôi muốn bạn viết gì (ít nhất 20 kí tự)',
+          },
+        },
+        submitHandler: function(form) {
+          $(form).ajaxSubmit({
+            type: 'POST',
+            data: $(form).serialize(),
+            url: '/contact/contact-message',
+            success: function(response) {
+              swal({
+                title: 'Cảm ơn bạn!',
+                text: 'Chúng tôi sẽ sớm liên hệ với bạn sớm nhất! <3',
+                icon: 'success',
+              });
+
+              document.getElementById('contactForm').reset();
             },
-            messages: {
-                name: {
-                    required: "come on, you have a name, don't you?",
-                    minlength: "your name must consist of at least 2 characters"
-                },
-                subject: {
-                    required: "come on, you have a subject, don't you?",
-                    minlength: "your subject must consist of at least 4 characters"
-                },
-                number: {
-                    required: "come on, you have a number, don't you?",
-                    minlength: "your Number must consist of at least 5 characters"
-                },
-                email: {
-                    required: "no email, no message"
-                },
-                message: {
-                    required: "um...yea, you have to write something to send this form.",
-                    minlength: "thats all? really?"
-                }
+            error: function(error) {
+              swal({
+                title: 'Lỗi!',
+                text: error.responseJSON.message,
+                icon: 'error',
+              });
             },
-            submitHandler: function(form) {
-                $(form).ajaxSubmit({
-                    type:"POST",
-                    data: $(form).serialize(),
-                    url:"contact_process.php",
-                    success: function() {
-                        $('#contactForm :input').attr('disabled', 'disabled');
-                        $('#contactForm').fadeTo( "slow", 1, function() {
-                            $(this).find(':input').attr('disabled', 'disabled');
-                            $(this).find('label').css('cursor','default');
-                            $('#success').fadeIn()
-                            $('.modal').modal('hide');
-		                	$('#success').modal('show');
-                        })
-                    },
-                    error: function() {
-                        $('#contactForm').fadeTo( "slow", 1, function() {
-                            $('#error').fadeIn()
-                            $('.modal').modal('hide');
-		                	$('#error').modal('show');
-                        })
-                    }
-                })
-            }
-        })
-    })
-        
- })(jQuery)
-})
+          });
+        },
+      });
+    });
+  })(jQuery);
+});

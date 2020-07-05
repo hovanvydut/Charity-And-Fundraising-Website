@@ -58,7 +58,7 @@
                     <input name="title" type="text" class="form-control" placeholder="Tiêu đề bài viết">
                   </div>
                   <div class="card-body">
-                    <textarea name="content" class="editor" style="visibility: hidden"></textarea>
+                    <textarea name="content" id="editor1" style="visibility: hidden"></textarea>
                   </div>
                   <div class="card-footer d-flex justify-content-end">
                     <button type="submit" class="btn btn-outline-primary btn-rounded waves-effect width-md waves-light">
@@ -132,68 +132,11 @@
       console.log(err);
     }
   </script>
-  <script src="ckeditor.js"></script>
+  <script src="ckeditor/ckeditor.js"></script>
   <script>
-    ClassicEditor
-      .create(document.querySelector('.editor'), {
-
-        toolbar: {
-          items: [
-            'undo',
-            'redo',
-            'highlight',
-            '|',
-            'bold',
-            'italic',
-            'link',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'indent',
-            'outdent',
-            '|',
-            'imageUpload',
-            'blockQuote',
-            'insertTable',
-            'mediaEmbed',
-            'exportPdf',
-            'fontSize',
-            'fontFamily',
-            'CKFinder'
-          ]
-        },
-        language: 'vi',
-        image: {
-          toolbar: [
-            'imageTextAlternative',
-            'imageStyle:full',
-            'imageStyle:side',
-          ]
-        },
-        table: {
-          contentToolbar: [
-            'tableColumn',
-            'tableRow',
-            'mergeTableCells'
-          ]
-        },
-        licenseKey: '',
-        simpleUpload: {
-          // The URL that the images are uploaded to.
-          uploadUrl: '/admin/blog/upload-image',
-        }
-      })
-      .then(editor => {
-        window.editor = editor;
-      })
-      .catch(error => {
-        console.error('Oops, something gone wrong!');
-        console.error(
-          'Please, report the following error in the https://github.com/ckeditor/ckeditor5 with the build id and the error stack trace:'
-        );
-        console.warn('Build id: z6mgsklm5rql-3vm5qrnccg3z');
-        console.error(error);
-      });
+    // Replace the <textarea id="editor1"> with a CKEditor 4
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1');
   </script>
 </body>
 
