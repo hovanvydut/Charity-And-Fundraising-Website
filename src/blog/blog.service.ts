@@ -14,6 +14,7 @@ export class BlogService {
   ) {}
 
   saveArticle(createArticleDto: CreateArticleDto, user: User): Promise<void> {
+    if (!createArticleDto.thumbnail) delete createArticleDto.thumbnail;
     return this.articleRepository.saveArticle(createArticleDto, user);
   }
 

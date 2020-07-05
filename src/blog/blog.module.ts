@@ -6,12 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleRepository } from './article.repository';
 
 @Module({
-  imports: [
-    MulterModule.register({
-      storage: './../../public/upload',
-    }),
-    TypeOrmModule.forFeature([ArticleRepository]),
-  ],
+  imports: [MulterModule, TypeOrmModule.forFeature([ArticleRepository])],
   providers: [BlogService],
   controllers: [BlogController],
 })

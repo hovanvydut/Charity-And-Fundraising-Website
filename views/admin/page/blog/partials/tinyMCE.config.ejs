@@ -1,7 +1,7 @@
 <script>
-  const URL_UPLOAD = '/admin/newpost/image';
+  const URL_UPLOAD = '/admin/blog/upload-image';
   tinymce.init({
-    selector: 'textarea#myEditor',
+    selector: 'textarea#editor1',
     plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons paste',
     mobile: {
       plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount textpattern noneditable help charmap quickbars emoticons advtable paste'
@@ -15,8 +15,8 @@
     autosave_retention: "20m",
     image_advtab: true,
     content_css: [
-      'fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-      'www.tiny.cloud/css/codepen.min.css'
+      'https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+      'https://www.tiny.cloud/css/codepen.min.css'
     ],
     importcss_append: true,
     height: 700,
@@ -62,7 +62,7 @@
       xhr.open('POST', URL_UPLOAD);
       xhr.onload = function () {
         var json;
-        if (xhr.status != 200) {
+        if (xhr.status != 200 && xhr.status != 201) {
           failure('HTTP Error: ' + xhr.status);
           return;
         }
@@ -76,7 +76,7 @@
 
       };
       formData = new FormData();
-      formData.append('imageUpload', blobInfo.blob(), blobInfo.filename());
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
       xhr.send(formData);
     }
   });

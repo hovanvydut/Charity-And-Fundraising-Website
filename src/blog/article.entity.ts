@@ -13,8 +13,17 @@ export class Article {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   title: string;
+
+  @Column({ default: '' })
+  description: string;
+
+  @Column({
+    default:
+      'https://res.cloudinary.com/dgext7ewd/image/upload/v1593970230/Charity_And_Fundraising/upload/default_thumbnail_eybsve.svg',
+  })
+  thumbnail: string;
 
   @Column({ type: 'text' })
   content: string;

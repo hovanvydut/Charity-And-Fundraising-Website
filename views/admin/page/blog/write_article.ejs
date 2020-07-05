@@ -7,6 +7,7 @@
   <title>Admin</title>
   <%- include('./../../partials/header') -%>
   <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
+  <link href="assets\libs\dropzone\dropzone.min.css" rel="stylesheet" type="text/css">
 </head>
 
 <body data-editor="ClassicEditor" data-collaboration="false">
@@ -36,7 +37,7 @@
           <div class="row">
             <div class="col-12">
               <div class="page-title-box">
-                <h4 class="page-title">Viết bài mới :)</h4>
+                <h4 class="page-title">Viết bài mới</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb p-0 m-0">
                     <li class="breadcrumb-item"><a href="#">Velonic</a></li>
@@ -55,7 +56,9 @@
               <form action="/admin/blog/write-article" method="POST">
                 <div class="card">
                   <div class="card-header">
-                    <input name="title" type="text" class="form-control" placeholder="Tiêu đề bài viết">
+                    <input name="title" type="text" class="form-control mb-3" placeholder="Tiêu đề bài viết">
+                    <input name="description"" type=" text" class="form-control" placeholder="Mô tả bài viết">
+                    <input name="thumbnail" type="hidden" id="thumbnail">
                   </div>
                   <div class="card-body">
                     <textarea name="content" id="editor1" style="visibility: hidden"></textarea>
@@ -67,6 +70,34 @@
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+
+          <!-- DROPZONE -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="header-title mb-4">Dropzone File Upload</h4>
+                  <form id="myAwesomeDropzone" action="/admin/blog/upload-image" method="POST"
+                    enctype="multipart/form-data" class="dropzone dz-clickable">
+                    <input name="file" type="file" class="dz-hidden-input"
+                      style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+                    <div class="dz-message needsclick">
+                      <div>
+                        <i class="mdi mdi-cloud-upload-outline display-4"></i>
+                      </div>
+                      <h4>Drop files here or click to upload.</h4>
+                      <span class="text-muted font-13">(This is just a demo dropzone. Selected files are
+                        <strong>not</strong> actually uploaded.)</span>
+                    </div>
+                  </form>
+                  <div class="clearfix text-right mt-3">
+                    <button type="button" class="btn btn-primary">Submit</button>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
 
@@ -132,11 +163,19 @@
       console.log(err);
     }
   </script>
-  <script src="ckeditor/ckeditor.js"></script>
+  <!-- <script src=<%= "https://cdn.tiny.cloud/1/" + tinyAPIKey + "/tinymce/5/tinymce.min.js" %> referrerpolicy="origin"> -->
+  <script src="tinymce/tinymce.min.js"></script>
+  </script>
+  <%- include('./partials/tinyMCE.config.ejs') -%>
+  <script src="assets\libs\dropzone\dropzone.min.js"></script>
   <script>
-    // Replace the <textarea id="editor1"> with a CKEditor 4
-    // instance, using default configuration.
-    CKEDITOR.replace('editor1');
+    Dropzone.options.myAwesomeDropzone = {
+      success: (file, responseText) => {
+        console.log(file)
+        console.log(responseText)
+        document.getElementById('thumbnail').value = responseText.location;
+      }
+    }
   </script>
 </body>
 

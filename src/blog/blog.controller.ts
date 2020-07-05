@@ -28,6 +28,10 @@ import { GetUser } from 'src/user/other/get_user.decorator';
 import { User } from 'src/user/user.entity';
 import { Article } from './article.entity';
 import { UpdateArticleDto } from './dto/update_article.dto';
+import { multerOptions } from 'src/config/multer.config.';
+import * as fs from 'fs';
+import cloudinary from './../config/cloudinary.config';
+const tinyAPIKey = '2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov';
 
 @Controller('admin/blog')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
@@ -60,6 +64,7 @@ export class BlogController {
         status: messageFlash[0],
         contents: messageFlash.slice(1),
       },
+      tinyAPIKey,
     };
   }
 
@@ -75,9 +80,15 @@ export class BlogController {
   }
 
   @Post('upload-image')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadImage(@UploadedFile() file) {
-    console.log(file);
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async uploadImage(@UploadedFile() file) {
+    const uploadedImg = await cloudinary.uploader.upload(file.path, {
+      tags: 'thumbnail',
+      folder: 'Charity_And_Fundraising/upload',
+    });
+    const thumbnailUrl = uploadedImg.url;
+    fs.unlinkSync(file.path);
+    return { location: thumbnailUrl };
   }
 
   @Get('articles')
@@ -106,6 +117,7 @@ export class BlogController {
     const articleData = await this.blogService.getArticleById(
       idOfArticleNeedEdit,
     );
+    console.log(articleData);
     return {
       user,
       articleData,
