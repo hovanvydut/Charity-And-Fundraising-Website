@@ -1,4 +1,4 @@
-import { MinLength, Min, IsString } from 'class-validator';
+import { MinLength, IsString } from 'class-validator';
 
 export class UpdateArticleDto {
   @MinLength(10)

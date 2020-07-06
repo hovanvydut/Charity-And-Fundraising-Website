@@ -7,19 +7,10 @@
   <title>Admin</title>
   <%- include('./../../partials/header') -%>
   <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
-  <link href="assets\libs\dropzone\dropzone.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" id="u0" referrerpolicy="origin"
-    href="https://cdn.tiny.cloud/1/2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov/tinymce/5.3.2-85/skins/ui/oxide/skin.min.css">
-  <style>
-    #tinymce {
-      color: black;
-      font-size: 16px;
-    }
-  </style>
+
 </head>
 
-<body data-editor="ClassicEditor" data-collaboration="false">
+<body>
 
   <!-- Begin page -->
   <div id="wrapper">
@@ -46,7 +37,7 @@
           <div class="row">
             <div class="col-12">
               <div class="page-title-box">
-                <h4 class="page-title">Viết bài mới</h4>
+                <h4 class="page-title">Tin nhắn liên hệ để ủng hộ</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb p-0 m-0">
                     <li class="breadcrumb-item"><a href="#">Velonic</a></li>
@@ -62,56 +53,52 @@
 
           <div class="row">
             <div class="col-lg-12">
-              <form action="/admin/blog/write-article" method="POST">
-                <div class="card">
-                  <div class="card-header">
-                    <input name="title" type="text" class="form-control mb-3" placeholder="Tiêu đề bài viết">
-                    <input name="description"" type=" text" class="form-control mb-3" placeholder="Mô tả bài viết">
-                    <input name="thumbnail" class="form-control" type="text" id="thumbnail"
-                      placeholder="Ảnh thumbnail (Liên kết ảnh hoặc sử dụng chức năng upload ảnh bên dưới)">
-                  </div>
-                  <div class="card-body">
-                    <textarea name="content" id="editor1" style="visibility: hidden"></textarea>
-                  </div>
-                  <div class="card-footer d-flex justify-content-end">
-                    <button type="submit" class="btn btn-outline-primary btn-rounded waves-effect width-md waves-light">
-                      Lưu dữ liệu
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <!-- DROPZONE -->
-          <div class="row">
-            <div class="col-12">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="header-title mb-4">Dropzone File Upload</h4>
-                  <form id="myAwesomeDropzone" action="/admin/blog/upload-image" method="POST"
-                    enctype="multipart/form-data" class="dropzone dz-clickable">
-                    <input name="file" type="file" class="dz-hidden-input"
-                      style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
-                    <div class="dz-message needsclick">
-                      <div>
-                        <i class="mdi mdi-cloud-upload-outline display-4"></i>
-                      </div>
-                      <h4>Kéo hoặc click vào đây để upload ảnh</h4>
+                  <div class="d-flex">
+                    <div class="w-50">
+                      <h4 class="header-title mb-4"></h4>
                     </div>
-                  </form>
+                    <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
+                      <a href="/admin/blog/write-article"><i style="padding: 0 10px; cursor: pointer"
+                          class="ion ion-md-add"></i></a>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table mb-0">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Tên</th>
+                          <th>Chủ đề</th>
+                          <th>Ngày</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% contactMessages ? contactMessages.forEach((contact, index) => { %>
+                        <tr>
+                          <th scope="row"><%= index + 1%></th>
+                          <td><a href="/admin/contact/contact-message/<%= contact.id %>/edit"><%= contact.name %></a>
+                          </td>
+                          <td><%= contact.subject %></td>
+                          <td><%= new Date(contact.created_at).toLocaleString() %></td>
+                        </tr>
+                        <%}) : null%>
+                      </tbody>
+                    </table>
+                  </div>
 
                 </div>
               </div>
             </div>
           </div>
 
-
         </div>
         <!-- end container-fluid -->
 
       </div>
       <!-- end content -->
+
 
       <!-- Footer Start -->
       <footer class="footer">
@@ -140,8 +127,6 @@
   <!-- /Right-bar -->
 
   <%- include('./../../partials/script_footer') -%>
-  <script src="assets\js\pages\form-validation.init.js"></script>
-  <script src="assets\libs\parsleyjs\parsley.min.js"></script>
   <script src="assets\libs\toastr\toastr.min.js"></script>
   <script>
     toastr.options = {
@@ -167,20 +152,6 @@
       contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
     } catch (err) {
       console.log(err);
-    }
-  </script>
-  <!-- <script src=<%= "https://cdn.tiny.cloud/1/" + tinyAPIKey + "/tinymce/5/tinymce.min.js" %> referrerpolicy="origin"> -->
-  <script src="tinymce/tinymce.min.js"></script>
-  </script>
-  <%- include('./partials/tinyMCE.config.ejs') -%>
-  <script src="assets\libs\dropzone\dropzone.min.js"></script>
-  <script>
-    Dropzone.options.myAwesomeDropzone = {
-      success: (file, responseText) => {
-        console.log(file)
-        console.log(responseText)
-        document.getElementById('thumbnail').value = responseText.location;
-      }
     }
   </script>
 </body>

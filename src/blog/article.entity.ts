@@ -16,12 +16,15 @@ export class Article {
   @Column()
   title: string;
 
-  @Column({ default: '' })
+  @Column()
+  slug: string;
+
+  @Column()
   description: string;
 
   @Column({
     default:
-      'https://res.cloudinary.com/dgext7ewd/image/upload/v1593970230/Charity_And_Fundraising/upload/default_thumbnail_eybsve.svg',
+      'https://res.cloudinary.com/dgext7ewd/image/upload/v1594021601/Charity_And_Fundraising/upload/default/default_image_sieswh.jpg',
   })
   thumbnail: string;
 

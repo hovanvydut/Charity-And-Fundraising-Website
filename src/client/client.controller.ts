@@ -1,7 +1,10 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Param } from '@nestjs/common';
+import { BlogService } from 'src/blog/blog.service';
 
 @Controller()
 export class ClientController {
+  constructor(private blogService: BlogService) {}
+
   @Get()
   @Render('client/page/index')
   homePage() {
@@ -16,8 +19,19 @@ export class ClientController {
 
   @Get('/blog')
   @Render('client/page/blog')
-  blogPage() {
-    return {};
+  async blogPage() {
+    const articleDatas = await this.blogService.getThumbnailArticle();
+    return {
+      articleDatas,
+    };
+  }
+
+  @Get('/blog/:slug')
+  @Render('client/page/single_blog')
+  async viewSingleBlog(@Param('slug') slug: string) {
+    const articleData = await this.blogService.getArticleBySlug(slug);
+    console.log(articleData);
+    return { articleData };
   }
 
   @Get('/campaign')

@@ -9,5 +9,6 @@ import { ArticleRepository } from './article.repository';
   imports: [MulterModule, TypeOrmModule.forFeature([ArticleRepository])],
   providers: [BlogService],
   controllers: [BlogController],
+  exports: [BlogService],
 })
 export class BlogModule {}

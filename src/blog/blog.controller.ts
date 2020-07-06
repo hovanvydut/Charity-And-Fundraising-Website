@@ -75,6 +75,7 @@ export class BlogController {
     @GetUser() user: User,
     @Req() req,
   ) {
+    console.log(createArticleDto);
     await this.blogService.saveArticle(createArticleDto, user);
     req.flash('message', ['success', 'Bài viết đã lưu']);
   }
@@ -84,7 +85,7 @@ export class BlogController {
   async uploadImage(@UploadedFile() file) {
     const uploadedImg = await cloudinary.uploader.upload(file.path, {
       tags: 'thumbnail',
-      folder: 'Charity_And_Fundraising/upload',
+      folder: 'Charity_And_Fundraising/upload/article',
     });
     const thumbnailUrl = uploadedImg.url;
     fs.unlinkSync(file.path);
@@ -117,7 +118,6 @@ export class BlogController {
     const articleData = await this.blogService.getArticleById(
       idOfArticleNeedEdit,
     );
-    console.log(articleData);
     return {
       user,
       articleData,

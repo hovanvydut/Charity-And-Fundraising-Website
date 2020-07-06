@@ -29,4 +29,12 @@ export class ContactService {
       throw Error('Error when query');
     }
   }
+
+  getAllContactMessages() {
+    return this.contactMessageRepository
+      .createQueryBuilder()
+      .select('*')
+      .orderBy('created_at', 'DESC')
+      .execute();
+  }
 }
