@@ -5,8 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { User } from 'src/user/user.entity';
+import { Category } from './category.entity';
+import { Tag } from './tag.entity';
 
 @Entity()
 export class Article {
@@ -43,4 +47,11 @@ export class Article {
     { eager: false, nullable: false },
   )
   author: User;
+
+  @ManyToOne(type => Category)
+  category: Category;
+
+  @ManyToMany(type => Tag)
+  @JoinTable()
+  tags: Tag[];
 }

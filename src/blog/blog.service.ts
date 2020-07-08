@@ -37,7 +37,10 @@ export class BlogService {
   }
 
   getArticleById(idOfArticleNeedEdit: number) {
-    return this.articleRepository.findOne({ id: idOfArticleNeedEdit });
+    return this.articleRepository.findOne(
+      { id: idOfArticleNeedEdit },
+      { relations: ['category', 'tags'] },
+    );
   }
 
   getArticleBySlug(slug: string) {
@@ -48,13 +51,10 @@ export class BlogService {
     idOfArticleNeedEdit: number,
     updateArticleDto: UpdateArticleDto,
   ) {
-    const slug = getSlug(`${updateArticleDto.title}-${Date.now()}`);
-    return this.articleRepository
-      .createQueryBuilder()
-      .update()
-      .set({ ...updateArticleDto, slug })
-      .where({ id: idOfArticleNeedEdit })
-      .execute();
+    return this.articleRepository.updateArticle(
+      idOfArticleNeedEdit,
+      updateArticleDto,
+    );
   }
 
   deleteArticle(idOfArticleNeedDelete: number) {

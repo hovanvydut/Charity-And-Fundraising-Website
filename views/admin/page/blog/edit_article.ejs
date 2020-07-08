@@ -11,10 +11,20 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" id="u0" referrerpolicy="origin"
     href="https://cdn.tiny.cloud/1/2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov/tinymce/5.3.2-85/skins/ui/oxide/skin.min.css">
+  <link href="assets\libs\select2\select2.min.css" rel="stylesheet" type="text/css">
   <style>
     #tinymce {
       color: black;
       font-size: 16px;
+    }
+
+    .select2-container .select2-selection--multiple .select2-selection__choice {
+      background-color: #3bc0c3;
+      border: none;
+      color: #fff;
+      border-radius: 3px;
+      padding: 0 7px;
+      margin-top: 7px;
     }
   </style>
 </head>
@@ -67,16 +77,39 @@
                   <div class="card-header">
                     <input name="title" type="text" class="form-control mb-3"
                       value="<%= articleData ? articleData.title : ''%>">
-                    <input name="description"" type=" text" class="form-control" placeholder="Mô tả bài viết"
+                    <input name="description"" type=" text" class="form-control mb-3" placeholder="Mô tả bài viết"
                       value="<%= articleData ? articleData.description : ''%>">
-                    <input name="thumbnail" type="hidden" id="thumbnail"
+                    <input name="thumbnail" class="form-control mb-3" type="text" id="thumbnail"
                       value="<%= articleData ? articleData.thumbnail : ''%>">
+                    <img id="imgThumbnail" src=<%= articleData ? articleData.thumbnail : '' %> class="mr-auto ml-auto"
+                      alt="">
                   </div>
+
                   <div class="card-body">
                     <textarea name="content" id="editor1" style="visibility: hidden">
                       <%= articleData ? articleData.content : null %>
                     </textarea>
                   </div>
+
+                  <div class="card-body">
+                    <div id="selectedTagAndCategory" style="display: none"
+                      data-category="<%= articleData ? articleData.category.id : ''%>"
+                      data-tags="<%= articleData ? articleData.tags.map(tag => tag.id) : '' %>"></div>
+                    <h4 class="header-title mb-4">Category và Tags</h4>
+                    <h5 class="font-14">Category</h5>
+                    <select id="categorySelect" class="js-example-basic-single" name="category">
+                      <% categories ? categories.forEach((category, idx) => { %>
+                      <option value="<%= category.id %>"><%= category.name %></option>
+                      <%}) : ''%>
+                    </select>
+                    <h5 class="font-14 mt-4">Tag</h5>
+                    <select id="tagsSelect" class="js-example-basic-multiple" name="tags[]" multiple="multiple">
+                      <% tags ? tags.forEach((tag, idx) => { %>
+                      <option value="<%= tag.id %>"><%= tag.name %></option>
+                      <%}) : ''%>
+                    </select>
+                  </div>
+
                   <div class="card-footer d-flex justify-content-end">
                     <button id="deleteUserBtn" type="button" data-toggle="modal" data-target=".bs-example-modal-sm"
                       class="mr-3 btn btn-outline-danger btn-rounded waves-effect width-md waves-light">
@@ -169,6 +202,7 @@
   <!-- /Right-bar -->
 
   <%- include('./../../partials/script_footer') -%>
+  <script src="assets\libs\select2\select2.min.js"></script>
   <script src="assets\libs\toastr\toastr.min.js"></script>
   <script>
     toastr.options = {
@@ -208,6 +242,26 @@
         document.getElementById('thumbnail').value = responseText.location;
       }
     }
+
+    $('#thumbnail').on('change', (event) => {
+      $('#imgThumbnail').attr('src', $('#thumbnail').val());
+    })
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.js-example-basic-single').select2();
+    });
+    $(document).ready(function () {
+      $('.js-example-basic-multiple').select2();
+    });
+    $(document).ready(function () {
+      console.log($('#selectedTagAndCategory').data('category'))
+      $('#tagsSelect').val($('#selectedTagAndCategory').data('tags').split(','));
+      $('#tagsSelect').trigger('change');
+      $('#categorySelect').val($('#selectedTagAndCategory').data('category'));
+      $('#categorySelect').trigger('change');
+    })
   </script>
 </body>
 

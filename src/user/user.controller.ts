@@ -29,6 +29,7 @@ import { UpdateUserValidationPipe } from './pipe/update_user.validation.pipe';
 import { SessionService } from 'src/session/session.service';
 import { GetUser } from './other/get_user.decorator';
 import { User } from './user.entity';
+import { GetFlashMessage } from './other/get_flash_message';
 
 @Controller('admin/manageusers')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
@@ -42,29 +43,21 @@ export class UserController {
 
   @Get('/general')
   @Render('admin/page/users/general')
-  async generalUser(@Req() req) {
-    const messageFlash = req.flash('message');
+  async generalUser(@Req() req, @GetFlashMessage() message) {
     const userList = await this.userService.getUsers();
     return {
       user: req.user,
-      message: {
-        status: messageFlash[0],
-        contents: messageFlash.slice(1),
-      },
+      message,
       userList,
     };
   }
 
   @Get('/create-user')
   @Render('admin/page/users/create_user')
-  createUserPage(@Req() req) {
-    const messageFlash = req.flash('message');
+  createUserPage(@Req() req, @GetFlashMessage() message) {
     return {
       user: req.user,
-      message: {
-        status: messageFlash[0],
-        contents: messageFlash.slice(1),
-      },
+      message,
       formData: req.flash('formData')[0],
     };
   }

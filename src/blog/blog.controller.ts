@@ -38,6 +38,9 @@ import { UpdateTagDto } from './dto/update_tag.dto';
 import { UpdateTagPipe } from './pipe/update_tag.pipe';
 import { UpdateCategoryPipe } from './pipe/update_category.pipe';
 import { UpdateCategoryDto } from './dto/update_category.dto';
+import { FlashMessageDto } from 'src/user/dto/flash_message';
+import { CreateArticlePipe } from './pipe/create_article.pipe';
+import { UpdateArticlePipe } from './pipe/update_article.pipe';
 const tinyAPIKey = '2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov';
 
 @Controller('admin/blog')
@@ -63,26 +66,28 @@ export class BlogController {
 
   @Get('write-article')
   @Render('admin/page/blog/write_article')
-  viewWriteArticle(@Req() req) {
-    const messageFlash = req.flash('message');
+  async viewWriteArticle(
+    @Req() req,
+    @GetFlashMessage() message: FlashMessageDto,
+  ) {
+    const categories = await this.blogService.getAllCategories();
+    const tags = await this.blogService.getAllTags();
     return {
       user: req.user,
-      message: {
-        status: messageFlash[0],
-        contents: messageFlash.slice(1),
-      },
+      message,
       tinyAPIKey,
+      categories,
+      tags,
     };
   }
 
   @Post('write-article')
   @Redirect('/admin/blog/articles')
   async saveArticle(
-    @Body() createArticleDto: CreateArticleDto,
+    @Body(CreateArticlePipe) createArticleDto: CreateArticleDto,
     @GetUser() user: User,
     @Req() req,
   ) {
-    console.log(createArticleDto);
     await this.blogService.saveArticle(createArticleDto, user);
     req.flash('message', ['success', 'Bài viết đã lưu']);
   }
@@ -120,28 +125,31 @@ export class BlogController {
     @GetUser() user: User,
     @Param('id', ParseIntPipe) idOfArticleNeedEdit: number,
     @Req() req,
+    @GetFlashMessage() message: FlashMessageDto,
   ) {
-    const messageFlash = req.flash('message');
     const articleData = await this.blogService.getArticleById(
       idOfArticleNeedEdit,
     );
+    console.log(articleData);
+    const tags = await this.blogService.getAllTags();
+    const categories = await this.blogService.getAllCategories();
     return {
       user,
       articleData,
-      message: {
-        status: messageFlash[0],
-        contents: messageFlash.slice(1),
-      },
+      message,
+      categories,
+      tags,
     };
   }
 
   @Patch('articles/:id/update')
   async updateArticle(
     @Param('id', ParseIntPipe) idOfArticleNeedEdit: number,
-    @Body() updateArticleDto: UpdateArticleDto,
+    @Body(UpdateArticlePipe) updateArticleDto: UpdateArticleDto,
     @Req() req,
     @Res() res,
   ) {
+    console.log(updateArticleDto);
     await this.blogService.updateArticle(idOfArticleNeedEdit, updateArticleDto);
     req.flash('message', ['success', 'Cập nhật bài viết thành công']);
     return res.redirect(`/admin/blog/articles/${idOfArticleNeedEdit}/edit`);
@@ -174,7 +182,6 @@ export class BlogController {
   // CATEGORY
   @Post('category-and-tag/category')
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    console.log('create');
     try {
       const data = await this.blogService.createCategory(createCategoryDto);
       return { data: data.raw[0] };
@@ -187,15 +194,12 @@ export class BlogController {
   async updateCategory(
     @Body(UpdateCategoryPipe) updateCategoryDto: UpdateCategoryDto,
   ) {
-    console.log('update');
     await this.blogService.updateCategory(updateCategoryDto);
-    console.log(updateCategoryDto);
     return { data: updateCategoryDto };
   }
 
   @Delete('/category-and-tag/category')
   async deleteCategory(@Body('id', ParseIntPipe) id: number) {
-    console.log('delete');
     await this.blogService.deleteCategoryById(id);
     return { data: { id } };
   }
