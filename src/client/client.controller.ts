@@ -30,7 +30,6 @@ export class ClientController {
   @Render('client/page/single_blog')
   async viewSingleBlog(@Param('slug') slug: string) {
     const articleData = await this.blogService.getArticleBySlug(slug);
-    console.log(articleData);
     return { articleData };
   }
 

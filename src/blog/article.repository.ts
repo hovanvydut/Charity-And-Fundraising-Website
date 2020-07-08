@@ -17,7 +17,7 @@ export class ArticleRepository extends Repository<Article> {
     article.content = content;
     article.thumbnail = thumbnail;
     article.author = user;
-    article.slug = getSlug(article.title + Date.now());
+    article.slug = getSlug(`${article.title}-${Date.now()}`);
 
     try {
       await this.save(article);

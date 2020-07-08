@@ -37,7 +37,7 @@
             <div class="col-lg-8 posts-list">
                <div class="single-post">
                   <div class="feature-img">
-                     <img class="img-fluid" src=<%= articleData.thumbnail %> alt="">
+                     <img class="img-fluid" src=<%= articleData ? articleData.thumbnail : ''%> alt="">
                   </div>
                   <div id="blog_details" class="blog_details">
                   </div>
@@ -425,9 +425,10 @@
       });
    </script>
    <script>
-      const content = `<%= articleData ? articleData.content : '' %>`;
-      console.log(content)
-      document.getElementById('blog_details').innerHTML = content;
+      const blogDetails = document.getElementById('blog_details');
+      const title = `<h2><%= articleData ? articleData.title : "" %></h2>`;
+      blogDetails.innerHTML += title;
+      blogDetails.innerHTML += jQuery.parseHTML(`<%= articleData ? articleData.content : "" %>`)[0].nodeValue;
    </script>
 </body>
 

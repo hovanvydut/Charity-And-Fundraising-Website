@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <base href="/public/admin/">
+  <title>Admin</title>
+  <%- include('./../../partials/header') -%>
+  <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
+  <style>
+    table tr td {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Begin page -->
+  <div id="wrapper">
+
+
+    <!-- Topbar Start -->
+    <%- include('./../../component/Topbar', {user}); -%>
+    <!-- end Topbar -->
+    <!-- ========== Left Sidebar Start ========== -->
+    <%- include('./../../component/Leftbar'); -%>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+          <!-- start page title -->
+          <div class="row">
+            <div class="col-12">
+              <div class="page-title-box">
+                <h4 class="page-title">Category và Tag</h4>
+                <div class="page-title-right">
+                  <ol class="breadcrumb p-0 m-0">
+                    <li class="breadcrumb-item"><a href="#">Velonic</a></li>
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Dashboard 1</li>
+                  </ol>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <!-- end page title -->
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex">
+                    <div class="w-50">
+                      <h4 class="header-title mb-4">Category</h4>
+                    </div>
+                    <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
+                      <a href="#" data-toggle="modal" data-target="#addCategoryModal"><i
+                          style="padding: 0 10px; cursor: pointer" class="ion ion-md-add"></i></a>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table id="categoryTable" class="table mb-0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Tên</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% categories ? categories.forEach((category, index) => { %>
+                        <tr>
+                          <th scope="row"><%= index + 1%></th>
+                          <td class="categoryName" onclick="editCategory.call(this, event)"
+                            data-categoryid="<%= category.id %>"><%= category.name %></td>
+                        </tr>
+                        <%}) : null%>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex">
+                    <div class="w-50">
+                      <h4 class="header-title mb-4">Tag</h4>
+                    </div>
+                    <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
+                      <a href="#" data-toggle="modal" data-target="#addTagModal"><i
+                          style="padding: 0 10px; cursor: pointer" class="ion ion-md-add"></i></a>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table id="tagTable" class="table mb-0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Tên</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% tags ? tags.forEach((tag, index) => { %>
+                        <tr>
+                          <th scope="row"><%= index + 1%></th>
+                          <td class="tagName" onclick="editTag.call(this, event)" data-tagid="<%= tag.id %>">
+                            <%= tag.name %></td>
+                        </tr>
+                        <%}) : null%>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- end container-fluid -->
+
+      </div>
+      <!-- end content -->
+
+      <!-- ADD CATEGORY MODAL -->
+      <div id="addCategoryModal" class=" modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Thêm Category</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <input id="inputAddCategoryModal" type="text" class="form-control" placeholder="Điền tên category">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Đóng</button>
+              <button id="btnAddCategoryModal" type="button" class="btn btn-primary waves-effect waves-light">Thêm
+                mới</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+      <!-- EDIT CATEGORY MODAL -->
+      <div id="editCategoryModal" class=" modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Chỉnh sửa thẻ tag</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <input id="inputEditCategoryIdModal" type="hidden" class="form-control" placeholder="Điền tên category">
+              <input id="inputEditCategoryNameModal" type="text" class="form-control" placeholder="Điền tên category">
+            </div>
+            <div class="modal-footer">
+              <button onClick="deleteCategory.call(this, event)" type="button" class="btn btn-danger waves-effect">Xóa
+                category</button>
+              <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Đóng</button>
+              <button id="btnEditCategoryModal" onClick="submitEditCategory.call(this, event)" type="button"
+                class="btn btn-primary waves-effect waves-light">Cập nhật</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+      <!-- ADD TAG MODAL -->
+      <div id="addTagModal" class=" modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Thêm thẻ tag</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <input id="inputAddTagModal" type="text" class="form-control" placeholder="Điền tên tag">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Đóng</button>
+              <button id="btnAddTagModal" type="button" class="btn btn-primary waves-effect waves-light">Thêm
+                mới</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+      <!-- EDIT TAG MODAL -->
+      <div id="editTagModal" class=" modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Chỉnh sửa thẻ tag</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <input id="inputEditTagIdModal" type="hidden" class="form-control" placeholder="Điền tên tag">
+              <input id="inputEditTagNameModal" type="text" class="form-control" placeholder="Điền tên tag">
+            </div>
+            <div class="modal-footer">
+              <button onClick="deleteTag.call(this, event)" type="button" class="btn btn-danger waves-effect">Xóa
+                tag</button>
+              <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Đóng</button>
+              <button id="btnEditTagModal" onClick="submitEditTag.call(this, event)" type="button"
+                class="btn btn-primary waves-effect waves-light">Cập nhật</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
+      <!-- Footer Start -->
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              2015 - 2020 &copy; Velonic theme by <a href="">Coderthemes</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+  </div>
+  <!-- END wrapper -->
+
+
+  <!-- Right Sidebar -->
+  <%- include('./../../component/Rightbar'); -%>
+  <!-- /Right-bar -->
+
+  <%- include('./../../partials/script_footer') -%>
+  <script src="assets\libs\toastr\toastr.min.js"></script>
+  <script>
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+    try {
+      const status = "<%- message ? message.status : '' %>";
+      const contentArr = "<%- message ? message.contents : '' %>";
+      contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
+    } catch (err) {
+      console.log(err);
+    }
+  </script>
+  <script>
+    $('#btnAddCategoryModal').on('click', (event) => {
+      event.preventDefault();
+      $.ajax({
+        url: '/admin/blog/category-and-tag/category',
+        method: 'POST',
+        data: {
+          name: $('#inputAddCategoryModal').val()
+        }
+      }).then((response) => {
+        Array.from($('#categoryTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 2)
+        $('#categoryTable>tbody').before($(
+          `<tr><th scope="row">1</th><td class="categoryName" onclick="editCategory.call(this, event)" data-categoryid="${response.data.id}">${response.data.name}</td></tr>`
+        ))
+        swal('Đã thêm', response.data.name, 'success')
+        $('#inputAddCategoryModal').val('')
+        $('#addCategoryModal').modal('hide')
+      }).catch((error) => {
+        swal('Lỗi', error.message, 'success')
+      })
+    })
+
+    $('#btnAddTagModal').on('click', (event) => {
+      event.preventDefault();
+      $.ajax({
+        url: '/admin/blog/category-and-tag/tag',
+        method: 'POST',
+        data: {
+          name: $('#inputAddTagModal').val()
+        }
+      }).then((response) => {
+        Array.from($('#tagTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 2)
+        $('#tagTable>tbody').before($(
+          `<tr><th scope="row">1</th><td class="tagName" onclick="editTag.call(this, event)" data-tagid="${response.data.id}">${response.data.name}</td></tr>`
+        ))
+        swal('Đã thêm', response.data.name, 'success')
+        $('#inputAddTagModal').val('')
+        $('#addTagModal').modal('hide')
+      }).catch((error) => {
+        swal('Lỗi', error.message, 'success')
+      })
+    })
+
+    function editTag(event) {
+      event.preventDefault();
+      $('#editTagModal').modal('toggle');
+      $('#inputEditTagIdModal').val(this.dataset.tagid);
+      $('#inputEditTagNameModal').val(this.innerText.trim())
+    }
+
+    function submitEditTag(event) {
+      event.preventDefault();
+      $.ajax({
+        url: '/admin/blog/category-and-tag/tag',
+        method: 'PATCH',
+        data: {
+          id: $('#inputEditTagIdModal').val(),
+          name: $('#inputEditTagNameModal').val()
+        }
+      }).then(response => {
+        $(`.tagName[data-tagid="${response.data.id}"]`).text(response.data.name)
+        $('#editTagModal').modal('toggle');
+        swal('Đã cập nhật', '', 'success')
+      }).catch(error => {
+        swal('Lỗi', error.message, 'success')
+      })
+    }
+
+    function deleteTag(event) {
+      event.preventDefault();
+      Swal.fire({
+        title: 'Xóa tag',
+        text: "Bạn chắc chắn chứ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xóa'
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: '/admin/blog/category-and-tag/tag',
+            method: 'DELETE',
+            data: {
+              id: $('#inputEditTagIdModal').val(),
+            }
+          }).then(response => {
+            $(`.tagName[data-tagid="${response.data.id}"]`).closest('tr').remove();
+            $('#editTagModal').modal('toggle');
+            swal('Đã xóa', '', 'success')
+            Array.from($('#tagTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 1)
+          }).catch(error => {
+            swal('Lỗi', error.message, 'success')
+          })
+        }
+      })
+    }
+
+    function editCategory(event) {
+      event.preventDefault();
+      $('#editCategoryModal').modal('toggle');
+      $('#inputEditCategoryIdModal').val(this.dataset.categoryid);
+      $('#inputEditCategoryNameModal').val(this.innerText.trim())
+    }
+
+    function submitEditCategory(event) {
+      event.preventDefault();
+      $.ajax({
+        url: '/admin/blog/category-and-tag/category',
+        method: 'PATCH',
+        data: {
+          id: $('#inputEditCategoryIdModal').val(),
+          name: $('#inputEditCategoryNameModal').val()
+        }
+      }).then(response => {
+        $(`.categoryName[data-categoryid="${response.data.id}"]`).text(response.data.name)
+        $('#editCategoryModal').modal('toggle');
+        swal('Đã cập nhật', '', 'success')
+      }).catch(error => {
+        swal('Lỗi', error.message, 'success')
+      })
+    }
+
+    function deleteCategory(event) {
+      event.preventDefault();
+      Swal.fire({
+        title: 'Xóa category',
+        text: "Bạn chắc chắn chứ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xóa'
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: '/admin/blog/category-and-tag/category',
+            method: 'DELETE',
+            data: {
+              id: $('#inputEditCategoryIdModal').val(),
+            }
+          }).then(response => {
+            $(`.categoryName[data-categoryid="${response.data.id}"]`).closest('tr').remove();
+            $('#editCategoryModal').modal('toggle');
+            swal('Đã xóa', '', 'success')
+            Array.from($('#categoryTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 1)
+          }).catch(error => {
+            swal('Lỗi', error.message, 'success')
+          })
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>
