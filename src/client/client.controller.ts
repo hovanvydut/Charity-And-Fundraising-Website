@@ -1,9 +1,16 @@
-import { Controller, Get, Render, Param } from '@nestjs/common';
+import { Controller, Get, Render, Param, Query } from '@nestjs/common';
 import { BlogService } from 'src/blog/blog.service';
+import { Like, FindOperator } from 'typeorm';
+import { stringify } from 'querystring';
+import { ClientService } from './client.service';
+import { QueryBlogDto } from 'src/blog/dto/query_blog.dto';
 
 @Controller()
 export class ClientController {
-  constructor(private blogService: BlogService) {}
+  constructor(
+    private blogService: BlogService,
+    private clientService: ClientService,
+  ) {}
 
   @Get()
   @Render('client/page/index')
@@ -19,10 +26,17 @@ export class ClientController {
 
   @Get('/blog')
   @Render('client/page/blog')
-  async blogPage() {
-    const articleDatas = await this.blogService.getThumbnailArticle();
+  async blogPage(@Query() queryBlogDto: QueryBlogDto) {
+    const articleDatas = await this.clientService.getAllThumbArticleWithQuery(
+      queryBlogDto,
+    );
+    console.log(articleDatas);
+    const tags = await this.blogService.getAllTags();
+    const categories = await this.blogService.getAllCategories();
     return {
       articleDatas,
+      tags,
+      categories,
     };
   }
 

@@ -130,7 +130,6 @@ export class BlogController {
     const articleData = await this.blogService.getArticleById(
       idOfArticleNeedEdit,
     );
-    console.log(articleData);
     const tags = await this.blogService.getAllTags();
     const categories = await this.blogService.getAllCategories();
     return {

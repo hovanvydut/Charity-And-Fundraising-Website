@@ -1,9 +1,9 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, Like } from 'typeorm';
 import { Article } from './article.entity';
 import { User } from 'src/user/user.entity';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
-import { Tag } from './tag.entity';
 import { UpdateArticleDto } from './dto/update_article.dto';
+import { ConditionQuery } from './dto/condition_query.dto';
 const getSlug = require('speakingurl');
 
 @EntityRepository(Article)
@@ -89,9 +89,8 @@ export class ArticleRepository extends Repository<Article> {
       .getMany();
   }
 
-  getThumbnailArticle() {
-    const query = this.createQueryBuilder('article');
-    return query
+  getThumbnailArticle(conditionQuery: ConditionQuery) {
+    const query = this.createQueryBuilder('article')
       .select([
         'user.name',
         'user.id',
@@ -101,10 +100,27 @@ export class ArticleRepository extends Repository<Article> {
         'article.description',
         'article.slug',
         'article.created_at',
+        'category.id',
+        'category.name',
       ])
-      .innerJoin('article.author', 'user')
-      .orderBy('article.created_at', 'DESC')
-      .getMany();
+      .leftJoin('article.author', 'user');
+
+    if (conditionQuery.categorySlug)
+      query.innerJoin('article.category', 'category', 'category.slug = :slug', {
+        slug: conditionQuery.categorySlug,
+      });
+    else query.innerJoin('article.category', 'category');
+
+    console.log(conditionQuery.tagSlug);
+    if (conditionQuery.tagSlug)
+      query.innerJoin('article.tags', 'tag', 'tag.slug IN (:slug)', {
+        slug: conditionQuery.tagSlug,
+      });
+
+    if (conditionQuery.titleSlug)
+      query.where({ slug: Like(conditionQuery.titleSlug) });
+
+    return query.orderBy('article.created_at', 'DESC').getMany();
   }
 
   findBySlug(slug: string) {

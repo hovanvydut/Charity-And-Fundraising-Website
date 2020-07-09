@@ -11,6 +11,8 @@ import { CreateTagDto } from './dto/create_tag.dto';
 import { TagRepository } from './tag.repository';
 import { UpdateTagDto } from './dto/update_tag.dto';
 import { UpdateCategoryDto } from './dto/update_category.dto';
+import { Condition } from 'typeorm';
+import { ConditionQuery } from './dto/condition_query.dto';
 const getSlug = require('speakingurl');
 
 @Injectable()
@@ -32,8 +34,8 @@ export class BlogService {
     return this.articleRepository.getAllArticles();
   }
 
-  getThumbnailArticle() {
-    return this.articleRepository.getThumbnailArticle();
+  getThumbnailArticle(conditionQuery: ConditionQuery) {
+    return this.articleRepository.getThumbnailArticle(conditionQuery);
   }
 
   getArticleById(idOfArticleNeedEdit: number) {
@@ -71,7 +73,8 @@ export class BlogService {
 
   updateCategory(updateCategoryDto: UpdateCategoryDto) {
     const { id, ...data } = updateCategoryDto;
-    return this.categoryRepository.update({ id: updateCategoryDto.id }, data);
+    const record = { ...data, slug: getSlug(data.name) };
+    return this.categoryRepository.update({ id: updateCategoryDto.id }, record);
   }
 
   deleteCategoryById(id: number) {
@@ -88,7 +91,8 @@ export class BlogService {
 
   updateTag(updateTagDto: UpdateTagDto) {
     const { id, ...data } = updateTagDto;
-    return this.tagRepository.update({ id: updateTagDto.id }, data);
+    const record = { ...data, slug: getSlug(data.name) };
+    return this.tagRepository.update({ id: updateTagDto.id }, record);
   }
 
   deleteTagById(id: number) {
