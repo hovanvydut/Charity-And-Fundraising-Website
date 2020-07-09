@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ContactMessage } from './contact_message.entity';
 import { ContactMessageRepository } from './contact_message.repository';
 import { ContactMessageDto } from './dto/contact_message.dto';
+import { UpdateContactMessageDto } from './dto/update_contact_message.dto';
 
 @Injectable()
 export class ContactService {
@@ -36,5 +37,18 @@ export class ContactService {
       .select('*')
       .orderBy('created_at', 'DESC')
       .execute();
+  }
+
+  findContactMessageById(id: number) {
+    return this.contactMessageRepository.findOne({ id });
+  }
+
+  updateContactMessage(updateContactMessageDto: UpdateContactMessageDto) {
+    const { id, ...record } = updateContactMessageDto;
+    return this.contactMessageRepository.update({ id: Number(id) }, record);
+  }
+
+  async deleteContactMessage(id: number) {
+    return this.contactMessageRepository.delete({ id });
   }
 }

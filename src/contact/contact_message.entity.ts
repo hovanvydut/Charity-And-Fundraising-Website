@@ -19,6 +19,9 @@ export class ContactMessage {
   @Column()
   subject: string;
 
+  @Column({ nullable: true })
+  note: string;
+
   @Column({ type: 'text' })
   message: string;
 

@@ -7,7 +7,11 @@
   <title>Admin</title>
   <%- include('./../../partials/header') -%>
   <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
-
+  <style>
+    tbody>tr:first-child>td {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
@@ -65,7 +69,7 @@
                     </div>
                   </div>
                   <div class="table-responsive">
-                    <table class="table mb-0">
+                    <table id="contactMessageTable" class="table mb-0">
                       <thead class="thead-light">
                         <tr>
                           <th>#</th>
@@ -78,8 +82,8 @@
                         <% contactMessages ? contactMessages.forEach((contact, index) => { %>
                         <tr>
                           <th scope="row"><%= index + 1%></th>
-                          <td><a href="/admin/contact/contact-message/<%= contact.id %>/edit"><%= contact.name %></a>
-                          </td>
+                          <td onclick="editContactMessage.call(this,event)" data-messageid="<%= contact.id %>">
+                            <%= contact.name %></td>
                           <td><%= contact.subject %></td>
                           <td><%= new Date(contact.created_at).toLocaleString() %></td>
                         </tr>
@@ -99,6 +103,55 @@
       </div>
       <!-- end content -->
 
+      <div id="editContactMessageModal" class=" modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Tin nhắn</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="card-body">
+              <form>
+                <input id="idInput" type="hidden">
+                <div class="form-group">
+                  <label for="nameInput">Tên</label>
+                  <input id="nameInput" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="subjectInput">Chủ đề</label>
+                  <input id="subjectInput" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="messageInput">Tin nhắn</label>
+                  <textarea id="messageInput" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="infoInput">Thông tin liên hệ</label>
+                  <input id="infoInput" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="noteInput">Ghi chú</label>
+                  <input id="noteInput" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="statusInput">Trạng thái</label>
+                  <input id="statusInput" type="text" class="form-control">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button onClick="deleteContactMessage.call(this, event)" type="button"
+                class="btn btn-danger waves-effect">Xóa</button>
+              <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Đóng</button>
+              <button id="btnUpdateMessageModal" onClick="updateContactMessage.call(this, event)" type="button"
+                class="btn btn-primary waves-effect waves-light">Cập nhật</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
 
       <!-- Footer Start -->
       <footer class="footer">
@@ -152,6 +205,86 @@
       contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
     } catch (err) {
       console.log(err);
+    }
+  </script>
+  <script>
+    function editContactMessage(event) {
+      event.preventDefault();
+      $('#editContactMessageModal').modal('toggle');
+      const messageId = this.dataset.messageid;
+      $.ajax({
+        url: `/admin/contact/contact-message/${messageId}`,
+        method: 'GET'
+      }).then(response => {
+        const {
+          id,
+          name,
+          subject,
+          info,
+          message,
+          created_at
+        } = response.contactMessages;
+        $('#idInput').val(id);
+        $('#nameInput').val(name);
+        $('#subjectInput').val(subject);
+        $('#messageInput').val(message);
+        $('#infoInput').val(info);
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+
+    function deleteContactMessage(event) {
+      event.preventDefault();
+
+      Swal.fire({
+        title: 'Xóa tag',
+        text: "Bạn chắc chắn chứ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xóa'
+      }).then((result) => {
+        const messageId = $('#idInput').val()
+        if (result.value) {
+          $.ajax({
+            url: `/admin/contact/contact-message/${messageId}`,
+            method: 'DELETE',
+          }).then(response => {
+            $(`.tagName[data-messageid="${messageId}"]`).closest('tr').remove();
+            $('#editContactMessageModal').modal('toggle');
+            swal('Đã xóa', '', 'success')
+            Array.from($('#contactMessageTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 1)
+          }).catch(error => {
+            console.log(error);
+            swal('Lỗi', error.message, 'error')
+          })
+        }
+      })
+    }
+
+    function updateContactMessage(event) {
+      event.preventDefault();
+      const record = {};
+      record.id = $('#idInput').val();
+      record.name = $('#nameInput').val();
+      record.subject = $('#subjectInput').val();
+      record.message = $('#messageInput').val();
+      record.info = $('#infoInput').val();
+      record.note = $('#noteInput').val();
+      $.ajax({
+        url: '/admin/contact/contact-message/${messageId}',
+        method: 'PATCH',
+        data: record
+      }).then(response => {
+        $('#editContactMessageModal').modal('toggle');
+        swal('Đã cập nhật', '', 'success')
+        $(`tbody>tr>td[data-messageid="${record.id}"]`).text(record.name)
+        $(`tbody>tr>td[data-messageid="${record.id}"]~td`).text(record.subject)
+      }).catch(error => {
+        swal('Lỗi', error.message, 'error')
+      })
     }
   </script>
 </body>

@@ -407,7 +407,7 @@
         $('#editCategoryModal').modal('toggle');
         swal('Đã cập nhật', '', 'success')
       }).catch(error => {
-        swal('Lỗi', error.message, 'success')
+        swal('Lỗi', error.message, 'error')
       })
     }
 
@@ -435,7 +435,7 @@
             swal('Đã xóa', '', 'success')
             Array.from($('#categoryTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 1)
           }).catch(error => {
-            swal('Lỗi', error.message, 'success')
+            swal('Lỗi', error.message, 'error')
           })
         }
       })

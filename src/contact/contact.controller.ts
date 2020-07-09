@@ -1,9 +1,25 @@
-import { Controller, Get, Post, Body, Render, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Render,
+  Req,
+  Query,
+  ParseIntPipe,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { ContactMessageDto } from './dto/contact_message.dto';
 import { ContactService } from './contact.service';
 import { ContactMessageValidationPipe } from './pipe/contact_messaage.validate';
 import { GetUser } from 'src/user/other/get_user.decorator';
 import { User } from 'src/user/user.entity';
+import { GetFlashMessage } from 'src/user/other/get_flash_message';
+import { FlashMessageDto } from 'src/user/dto/flash_message';
+import { UpdateContactMessageDto } from './dto/update_contact_message.dto';
+import { throwError } from 'rxjs';
 
 @Controller()
 export class ContactController {
@@ -24,6 +40,29 @@ export class ContactController {
   sponsorMessage() {}
 
   // server
+  @Get('/admin/contact/contact-message/:id')
+  async findContactMessage(@Param('id', ParseIntPipe) id: number) {
+    const contactMessages = await this.contactService.findContactMessageById(
+      id,
+    );
+    return {
+      contactMessages,
+    };
+  }
+
+  @Patch('/admin/contact/contact-message/:id')
+  async updateContactMessage(
+    @Body() updateContactMessageDto: UpdateContactMessageDto,
+  ) {
+    await this.contactService.updateContactMessage(updateContactMessageDto);
+  }
+
+  @Delete('/admin/contact/contact-message/:id')
+  async deleteContactMessage(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.contactService.deleteContactMessage(id);
+    if (result.affected == 0) throw new Error('Id của tin nhắn không tồn tại');
+  }
+
   @Get('/admin/contact/contact-message')
   @Render('admin/page/contact/contact_message')
   async viewContactMessage(@GetUser() currentUser: User, @Req() req) {
