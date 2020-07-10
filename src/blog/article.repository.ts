@@ -111,7 +111,6 @@ export class ArticleRepository extends Repository<Article> {
       });
     else query.innerJoin('article.category', 'category');
 
-    console.log(conditionQuery.tagSlug);
     if (conditionQuery.tagSlug)
       query.innerJoin('article.tags', 'tag', 'tag.slug IN (:slug)', {
         slug: conditionQuery.tagSlug,
