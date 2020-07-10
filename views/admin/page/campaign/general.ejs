@@ -37,7 +37,7 @@
           <div class="row">
             <div class="col-12">
               <div class="page-title-box">
-                <h4 class="page-title">Quản lý thành viên</h4>
+                <h4 class="page-title">Quản lý chiến dịch</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb p-0 m-0">
                     <li class="breadcrumb-item"><a href="#">Velonic</a></li>
@@ -53,43 +53,30 @@
 
           <div class="row">
             <div class="col-12">
-              <h5 class="my-4">Decks</h5>
+              <div class="d-flex">
+                <div class="w-50">
+                  <h5 class="my-4">Chiến dịch đã phát động</h5>
+                </div>
+                <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
+                  <a href="/admin/campaign/create"><i style="padding: 0 10px; cursor: pointer"
+                      class="ion ion-md-add"></i></a>
+                </div>
+              </div>
               <div class="card-deck-wrapper">
                 <div class="card-deck">
-                  <div class="card mb-3">
-                    <img class="card-img-top img-fluid" src="assets\images\gallery\9.jpg" alt="Card image cap">
+                  <% campaigns ? campaigns.forEach(campaign => { %>
+                  <div class="card mb-3 col-md-4">
+                    <img class="card-img-top img-fluid" src="<%= campaign.thumbnail %>" alt="Card image cap">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
+                      <h5 class="card-title"><a href="/admin/campaign/<%= campaign.id %>/edit"><%= campaign.name %></a>
+                      </h5>
+                      <p class="card-text"><%= campaign.description %></p>
                       <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
+                        <small class="text-muted"><%= campaign.status %></small>
                       </p>
                     </div>
                   </div>
-                  <div class="card mb-3">
-                    <img class="card-img-top img-fluid" src="assets\images\gallery\11.jpg" alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This card has supporting text below as a natural lead-in to additional
-                        content.</p>
-                      <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                      </p>
-                    </div>
-                  </div>
-                  <div class="card mb-3">
-                    <img class="card-img-top img-fluid" src="assets\images\gallery\12.jpg" alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This card has even longer content than the first to show that equal height
-                        action.</p>
-                      <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                      </p>
-                    </div>
-                  </div>
+                  <% }) : '' %>
                 </div>
               </div>
             </div>

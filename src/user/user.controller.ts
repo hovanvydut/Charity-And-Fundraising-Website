@@ -11,9 +11,10 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Redirect,
   Delete,
-  InternalServerErrorException,
+  UseInterceptors,
+  UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
 import { CreateUserExceptionFilter } from './filter/create_user.exception.filter';
@@ -30,6 +31,11 @@ import { SessionService } from 'src/session/session.service';
 import { GetUser } from './other/get_user.decorator';
 import { User } from './user.entity';
 import { GetFlashMessage } from './other/get_flash_message';
+import { FlashMessageDto } from './dto/flash_message';
+import { FileInterceptor } from '@nestjs/platform-express';
+import cloudinary from './../config/cloudinary.config';
+import { multerOptions } from 'src/config/multer.config.';
+import * as fs from 'fs';
 
 @Controller('admin/manageusers')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
@@ -54,7 +60,7 @@ export class UserController {
 
   @Get('/create-user')
   @Render('admin/page/users/create_user')
-  createUserPage(@Req() req, @GetFlashMessage() message) {
+  viewCreateUserPage(@Req() req, @GetFlashMessage() message) {
     return {
       user: req.user,
       message,
@@ -140,5 +146,64 @@ export class UserController {
       req.flash('message', ['error', error.message]);
       return res.redirect(`/admin/manageusers/${id}/edit`);
     }
+  }
+
+  // ! MY-PROFILE
+  @Roles(RoleEnum.VOLUNTEER, RoleEnum.SPONSOR, RoleEnum.MOD, RoleEnum.ADMIN)
+  @Get('/my-profile')
+  @Render('admin/page/users/profile')
+  async viewMyProfile(
+    @GetUser() user,
+    @GetFlashMessage() message: FlashMessageDto,
+  ) {
+    const userData = await this.userService.findOne({ id: user.id });
+    return {
+      user,
+      message,
+      userData,
+    };
+  }
+
+  @Roles(RoleEnum.VOLUNTEER, RoleEnum.SPONSOR, RoleEnum.MOD, RoleEnum.ADMIN)
+  @Patch('/my-profile/update')
+  async updateMyProfile(
+    @Req() req,
+    @Res() res,
+    @GetUser() currentUser,
+    @Body(UpdateUserValidationPipe) updateUserDto: UpdateUserDto,
+  ) {
+    try {
+      await this.userService.updateUser(
+        currentUser.id,
+        updateUserDto,
+        currentUser,
+      );
+      req.session.passport.user = {
+        ...req.session.passport.user,
+        ...updateUserDto,
+      };
+      req.session.save(function(error) {
+        !error
+          ? req.flash('message', ['success', 'Cập nhật thành công'])
+          : req.flash('message', ['error', error.message]);
+      });
+    } catch (error) {
+      req.flash('message', ['error', error.message]);
+    }
+    return res.redirect('/admin/manageusers/my-profile');
+  }
+
+  @Roles(RoleEnum.VOLUNTEER, RoleEnum.SPONSOR, RoleEnum.MOD, RoleEnum.ADMIN)
+  @Post('/upload-image')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async uploadImage(@UploadedFile() file, @Query() query) {
+    const tags = query.tag || 'other';
+    const uploadedImg = await cloudinary.uploader.upload(file.path, {
+      tags,
+      folder: 'Charity_And_Fundraising/upload/avatar',
+    });
+    const thumbnailUrl = uploadedImg.url;
+    fs.unlinkSync(file.path);
+    return { location: thumbnailUrl };
   }
 }

@@ -10,6 +10,8 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 import { ContactMessageDto } from './dto/contact_message.dto';
 import { ContactService } from './contact.service';
@@ -20,8 +22,16 @@ import { GetFlashMessage } from 'src/user/other/get_flash_message';
 import { FlashMessageDto } from 'src/user/dto/flash_message';
 import { UpdateContactMessageDto } from './dto/update_contact_message.dto';
 import { throwError } from 'rxjs';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { RoleEnum } from 'src/user/other/user_role.enum';
+import { AuthExceptionFilter } from 'src/auth/filter/auth_exceptions.filter';
+import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Controller()
+@Roles(RoleEnum.ADMIN, RoleEnum.MOD)
+@UseGuards(AuthenticatedGuard, RolesGuard)
+@UseFilters(AuthExceptionFilter)
 export class ContactController {
   constructor(private contactService: ContactService) {}
 

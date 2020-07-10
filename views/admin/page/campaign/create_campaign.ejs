@@ -7,7 +7,6 @@
   <title>Admin</title>
   <%- include('./../../partials/header') -%>
   <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
-
 </head>
 
 <body>
@@ -37,7 +36,7 @@
           <div class="row">
             <div class="col-12">
               <div class="page-title-box">
-                <h4 class="page-title">Quản lý chiến dịch</h4>
+                <h4 class="page-title">Phát động chiến dịch</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb p-0 m-0">
                     <li class="breadcrumb-item"><a href="#">Velonic</a></li>
@@ -53,49 +52,55 @@
 
           <div class="row">
             <div class="col-lg-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex">
-                    <div class="w-50">
-                      <h4 class="header-title mb-4">Tất cả thành viên</h4>
+              <form action="/admin/campaign/create" method="POST" class="parsley-examples" novalidate="">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="header-title mb-4"></h4>
+                    <div class="form-group row">
+                      <label for="name" class="col-md-4 col-form-label">Tên chiến dịch<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="name" name="name" data-parsley-minlength="6" type=" text" required=""
+                          class="form-control" placeholder="Tên chiến dịch"
+                          value="<%= formData && formData.name ? `${formData.name}` : ''%>">
+                      </div>
                     </div>
-                    <div class="w-50 d-flex justify-content-end" style="font-size: 22px">
-                      <a href="/admin/manageusers/create-user"><i style="padding: 0 10px; cursor: pointer"
-                          class="ion ion-md-person-add"></i></a>
+                    <div class="form-group row">
+                      <label for="description" class="col-md-4 col-form-label">Mô tả<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="description" name="description" data-parsley-minlength="6" type=" text" required=""
+                          class="form-control" placeholder=""
+                          value="<%= formData && formData.description ? `${formData.description}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="status" class="col-md-4 col-form-label">Trạng thái<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="status" name="status" data-parsley-minlength="6" type=" text" required=""
+                          class="form-control" placeholder="Đang phát đông/ Đang quyên góp/ Kết thúc ..."
+                          value="<%= formData && formData.status ? `${formData.status}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="thumbnail" class="col-md-4 col-form-label">Thumbnail</label>
+                      <div class="col-md-7">
+                        <input id="thumbnail" name="thumbnail" type=" text" class="form-control"
+                          placeholder="Link ảnh (tính năng upload ảnh sẽ hỗ trợ sau)"
+                          value="<%= formData && formData.thumbnail ? `${formData.thumbnail}` : ''%>">
+                      </div>
+                    </div>
+                    <div class=" form-group row mb-0">
+                      <div class="col-md-8 offset-md-4">
+                        <button type="submit" class="btn btn-outline-primary btn-rounded waves-effect waves-light mr-1">
+                          Tạo
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div class="table-responsive">
-                    <table class="table mb-0">
-                      <thead class="thead-light">
-                        <tr>
-                          <th>#</th>
-                          <th>Tên</th>
-                          <th>Vai trò</th>
-                          <th>Email</th>
-                          <th>Điện thoại</th>
-                          <th>Địa chỉ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <%- include('./partials/convertRoleUser') -%>
-                        <% userList ? userList.forEach((userData, index) => { %>
-                        <% if (userData.role != 1 || userData.id != user.id) { %>
-                        <tr>
-                          <th scope="row"><%= index + 1%></th>
-                          <td><a href="/admin/manageusers/<%= userData.id %>/edit"><%= userData.name %></a></td>
-                          <td><%= converRoleUserToString(userData.role) %></td>
-                          <td><%= userData.email %></td>
-                          <td><%= userData.phone %></td>
-                          <td><%= userData.address %></td>
-                        </tr>
-                        <% } %>
-                        <%}) : null%>
-                      </tbody>
-                    </table>
-                  </div>
-
                 </div>
-              </div>
+              </form>
             </div>
           </div>
 
@@ -104,6 +109,8 @@
 
       </div>
       <!-- end content -->
+
+
 
 
       <!-- Footer Start -->
@@ -133,6 +140,8 @@
   <!-- /Right-bar -->
 
   <%- include('./../../partials/script_footer') -%>
+  <script src="assets\js\pages\form-validation.init.js"></script>
+  <script src="assets\libs\parsleyjs\parsley.min.js"></script>
   <script src="assets\libs\toastr\toastr.min.js"></script>
   <script>
     toastr.options = {
@@ -154,10 +163,8 @@
     }
     try {
       const status = "<%- message ? message.status : '' %>";
-      console.log(status);
       const contentArr = "<%- message ? message.contents : '' %>";
       contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
-      console.log(contentArr);
     } catch (err) {
       console.log(err);
     }

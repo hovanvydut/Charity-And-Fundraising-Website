@@ -4,24 +4,41 @@ import { Like, FindOperator } from 'typeorm';
 import { stringify } from 'querystring';
 import { ClientService } from './client.service';
 import { QueryBlogDto } from 'src/blog/dto/query_blog.dto';
+import { CampaignService } from 'src/campaign/campaign.service';
 
 @Controller()
 export class ClientController {
   constructor(
     private blogService: BlogService,
     private clientService: ClientService,
+    private campaignService: CampaignService,
   ) {}
 
   @Get()
   @Render('client/page/index')
-  homePage() {
-    return {};
+  async homePage() {
+    const campaignList = await this.campaignService.getAllCampaignThumb();
+    return { campaignList };
   }
 
   @Get('/about')
   @Render('client/page/About')
   aboutPage() {
     return {};
+  }
+
+  @Get('/campaign/:slug')
+  @Render('client/page/detail_campaign')
+  async detailCampaignPage(@Param('slug') slug: string) {
+    const deatailCampaign = await this.campaignService.findBy({ slug });
+    return { deatailCampaign };
+  }
+
+  @Get('/campaign')
+  @Render('client/page/campaign')
+  async campaignPage() {
+    const campaignList = await this.campaignService.getAllCampaignThumb();
+    return { campaignList };
   }
 
   @Get('/blog')

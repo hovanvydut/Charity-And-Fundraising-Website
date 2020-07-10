@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <base href="/public/admin/">
+  <title>Admin</title>
+  <%- include('./../../partials/header') -%>
+  <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
+  <link href="assets\libs\dropzone\dropzone.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+  <!-- Begin page -->
+  <div id="wrapper">
+
+
+    <!-- Topbar Start -->
+    <%- include('./../../component/Topbar', {user}); -%>
+    <!-- end Topbar -->
+    <!-- ========== Left Sidebar Start ========== -->
+    <%- include('./../../component/Leftbar'); -%>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+      <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+          <!-- start page title -->
+          <div class="row">
+            <div class="col-12">
+              <div class="page-title-box">
+                <h4 class="page-title">Thêm mới người dùng</h4>
+                <div class="page-title-right">
+                  <ol class="breadcrumb p-0 m-0">
+                    <li class="breadcrumb-item"><a href="#">Velonic</a></li>
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Dashboard 1</li>
+                  </ol>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <!-- end page title -->
+
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="header-title mb-4"></h4>
+
+                  <form action="/admin/manageusers/my-profile/update?_method=PATCH" method="POST"
+                    enctype="application/x-www-form-urlencoded" class="parsley-examples" novalidate="">
+                    <div class="form-group row">
+                      <label for="name" class="col-md-4 col-form-label">Tên<span class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="name" name="name" type="text" required="" class="form-control"
+                          placeholder="Họ và tên" value="<%= userData && userData.name ? `${userData.name}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="email" class="col-md-4 col-form-label">Email<span class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="email" name="email" type="email" required="" parsley-type="email"
+                          class="form-control" placeholder="Địa chỉ email"
+                          value="<%= userData && userData.email ? `${userData.email}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="phone" class="col-md-4 col-form-label">Số điện thoại<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="phone" name="phone" type="number" data-parsley-type="integer" required=""
+                          class="form-control" placeholder="Số điện thoại liên hệ"
+                          value="<%= userData && userData.phone ? `${userData.phone}` : ''%>">
+                      </div>
+                    </div>
+                    <div class=" form-group row">
+                      <label for="password" class="col-md-4 col-form-label">Mật khẩu<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="password" name="password" type="password" placeholder="Mật khẩu"
+                          class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="confirmpassword" class="col-md-4 col-form-label">Xác nhận mật khẩu
+                        <span class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="confirmpassword" data-parsley-equalto="#password" type="password"
+                          placeholder="Xác nhận lại mật khẩu" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="address" class="col-md-4 col-form-label">Địa chỉ<span
+                          class="text-danger">*</span></label>
+                      <div class="col-md-7">
+                        <input id="address" name="address" data-parsley-minlength="6" type=" text" required=""
+                          class="form-control" placeholder="Địa chỉ hiện tại"
+                          value="<%= userData && userData.address ? `${userData.address}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="avatar" class="col-md-4 col-form-label">Ảnh đại diện</label>
+                      <div class="col-md-7">
+                        <input id="avatar" name="avatar" type="url" parsley-type="url" class="form-control"
+                          placeholder="Link ảnh đại diện"
+                          value="<%= userData && userData.avatar ? `${userData.avatar}` : ''%>">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <img id="imgAvatar" class="d-block mr-auto ml-auto"
+                        src="<%= userData && userData.avatar ? `${userData.avatar}` : ''%>">
+                    </div <div class=" form-group row mb-0">
+                    <div class="col-md-8 offset-md-4">
+                      <button type="submit" class="btn btn-outline-primary btn-rounded waves-effect waves-light mr-1">
+                        Cập nhật
+                      </button>
+                    </div>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- DROPZONE -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="header-title mb-4">Dropzone File Upload</h4>
+                <form id="myAwesomeDropzone" action="/admin/manageusers/upload-image?tag=avatar" method="POST"
+                  enctype="multipart/form-data" class="dropzone dz-clickable">
+                  <input name="file" type="file" class="dz-hidden-input"
+                    style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+                  <div class="dz-message needsclick">
+                    <div>
+                      <i class="mdi mdi-cloud-upload-outline display-4"></i>
+                    </div>
+                    <h4>Kéo hoặc click vào đây để upload ảnh</h4>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end container-fluid -->
+
+    </div>
+    <!-- end content -->
+
+
+
+    <!-- Footer Start -->
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            2015 - 2020 &copy; Velonic theme by <a href="">Coderthemes</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- end Footer -->
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+  </div>
+  <!-- END wrapper -->
+
+
+  <!-- Right Sidebar -->
+  <%- include('./../../component/Rightbar'); -%>
+  <!-- /Right-bar -->
+
+  <%- include('./../../partials/script_footer') -%>
+  <script src="assets\js\pages\form-validation.init.js"></script>
+  <script src="assets\libs\parsleyjs\parsley.min.js"></script>
+  <script src="assets\libs\toastr\toastr.min.js"></script>
+  <script src="assets\libs\dropzone\dropzone.min.js"></script>
+
+  <script>
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+    try {
+      const status = "<%- message ? message.status : '' %>";
+      const contentArr = "<%- message ? message.contents : '' %>";
+      console.log(status);
+      contentArr.split(',').forEach(content => content != '' ? toastr[status](content) : null)
+      console.log(contentArr)
+    } catch (err) {
+      console.log(err);
+    }
+  </script>
+  <script>
+    Dropzone.options.myAwesomeDropzone = {
+      success: (file, responseText) => {
+        console.log(file)
+        console.log(responseText)
+        $('#avatar').val(responseText.location)
+        $('#imgAvatar').attr('src', responseText.location);
+      }
+    }
+
+    $('#avatar').on('change', (event) => {
+      $('#imgAvatar').attr('src', $('#avatar').val());
+    })
+  </script>
+</body>
+
+</html>
