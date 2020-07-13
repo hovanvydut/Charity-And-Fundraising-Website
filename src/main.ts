@@ -13,7 +13,6 @@ import * as config from 'config';
 import { connect } from 'http2';
 
 async function bootstrap() {
-  console.log(process.env);
   const serverConfig = config.get('server');
   const dbConfig = config.get('db');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -24,6 +23,7 @@ async function bootstrap() {
   app.setViewEngine('ejs');
 
   const connectDBString = process.env.DB_URI || dbConfig.uri;
+  console.log(connectDBString);
   app.use(
     session({
       store: new (PostgreSqlStore(session))({
