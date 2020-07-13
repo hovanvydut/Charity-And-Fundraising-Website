@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -11,6 +12,7 @@ import * as methodOverride from 'method-override';
 import * as config from 'config';
 
 async function bootstrap() {
+  console.log(process.env);
   const serverConfig = config.get('server');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');
