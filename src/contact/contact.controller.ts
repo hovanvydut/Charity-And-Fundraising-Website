@@ -55,6 +55,7 @@ export class ContactController {
     const contactMessages = await this.contactService.findContactMessageById(
       id,
     );
+    console.log(contactMessages);
     return {
       contactMessages,
     };

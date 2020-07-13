@@ -22,4 +22,7 @@ export class UpdateContactMessageDto {
 
   @IsString()
   note: string;
+
+  @IsString()
+  status: string;
 }

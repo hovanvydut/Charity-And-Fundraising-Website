@@ -8,19 +8,11 @@ import { SessionModule } from './session/session.module';
 import { BlogModule } from './blog/blog.module';
 import { ContactModule } from './contact/contact.module';
 import { CampaignModule } from './campaign/campaign.module';
+import { typeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '123456',
-      database: 'Charity_Fundraising',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
     UserModule,
     AdminModule,

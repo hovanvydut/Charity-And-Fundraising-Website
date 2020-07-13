@@ -8,8 +8,10 @@ import * as session from 'express-session';
 import passport = require('passport');
 import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
+import * as config from 'config';
 
 async function bootstrap() {
+  const serverConfig = config.get('server');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');
 
@@ -35,7 +37,8 @@ async function bootstrap() {
   app.use(flash());
   app.use(methodOverride('_method'));
 
-  await app.listen(3000);
-  logger.log(`Application listening on port 3000`);
+  const port = process.env.PORT || serverConfig.port || 3000;
+  await app.listen(port);
+  logger.log(`Application listening on port ${port}`);
 }
 bootstrap();

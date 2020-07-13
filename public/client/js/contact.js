@@ -28,27 +28,25 @@ $(document).ready(function() {
           },
           message: {
             required: true,
-            minlength: 20,
+            minlength: 1,
           },
         },
         messages: {
           name: {
-            required: 'Uhm... chắc bạn quên tên rồi, hãy điền nhé',
+            required: 'Uhm... chắc bạn quên tên rồi',
             minlength: 'Tên của bạn phải ít nhất 2 kí tự',
           },
           subject: {
-            required: 'Uhm... chắc bạn quên điền tiêu đề rồi, hãy điền nhé',
+            required: 'Uhm... chắc bạn quên điền tiêu đề rồi',
             minlength: 'Tiêu đề phải có ít nhất 4 kí tự',
           },
           info: {
-            required:
-              'Uhm... chắc bạn quên điền thông tin liên hệ rồi, hãy điền nhé',
+            required: 'Uhm... chắc bạn quên điền thông tin liên hệ rồi',
             minlength: 'Thông tin phải có ít nhất 5 kí tự',
           },
           message: {
-            required: 'Uhm... chắc bạn quên điền tin nhắn rồi, hãy điền nhé',
-            minlength:
-              'Có ngắn quá không, hãy viết thêm để chúng tôi muốn bạn viết gì (ít nhất 20 kí tự)',
+            required: 'Uhm... chắc bạn quên điền tin nhắn rồi',
+            minlength: 'Bạn hãy viết đó.',
           },
         },
         submitHandler: function(form) {

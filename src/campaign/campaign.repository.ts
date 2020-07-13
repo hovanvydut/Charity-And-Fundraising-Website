@@ -13,7 +13,7 @@ export class CampaignRepository extends Repository<Campaign> {
       .insert()
       .values({
         ...createCampaignDto,
-        slug: getSlug(createCampaignDto.name + '-' + Date.now()),
+        slug: getSlug(createCampaignDto.name),
       })
       .returning('*')
       .execute();

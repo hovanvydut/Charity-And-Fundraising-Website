@@ -6,24 +6,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Charifit</title>
     <%- include('./../common/header') -%>
-    <style>
-        #campaign_content img {
-            width: 100%;
-        }
-
-        #contactForm {
-            font-family: Arial, Helvetica, sans-serif
-        }
-
-        #contactForm input,
-        #contactForm textarea {
-            font-size: 16px;
-        }
-
-        form#contactForm div label {
-            color: red;
-        }
-    </style>
 </head>
 
 <body>
@@ -62,6 +44,21 @@
                         </div>
 
                         <div id="campaign_content" class="causes_content">
+                            <div class="custom_progress_bar">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="30"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                        <span class="progres_count">
+                                            30%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="balance d-flex justify-content-between align-items-center">
+                                <span><%= deatailCampaign ? deatailCampaign.status : '' %></span>
+                                <span><%= deatailCampaign ? new Date(deatailCampaign.created_at).toLocaleString() : '' %></span>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -69,6 +66,9 @@
                                 <h3 class="contact-title">Bạn muốn quyên góp hay muốn trở thành 1 phần của chúng tôi?
                                 </h3>
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-lg-8">
                                 <form id="contactForm" class="form-contact contact_form" action="contact_process.php"
                                     method="post" id="contactForm" novalidate="novalidate">
@@ -107,22 +107,23 @@
                                 <div class="media contact-info">
                                     <span class="contact-info__icon"><i class="ti-home"></i></span>
                                     <div class="media-body">
-                                        <h3>Buttonwood, California.</h3>
-                                        <p>Rosemead, CA 91770</p>
+                                        <h3>54 Nguyễn Lương Bằng</h3>
+                                        <p>Đại học Bách Khoa, Đà Nẵng</p>
                                     </div>
                                 </div>
                                 <div class="media contact-info">
                                     <span class="contact-info__icon"><i class="ti-tablet"></i></span>
                                     <div class="media-body">
-                                        <h3>+1 253 565 2365</h3>
-                                        <p>Mon to Fri 9am to 6pm</p>
+                                        <h3>0905 694 438</h3>
+                                        <p>Tất cả các giờ trong ngày</p>
                                     </div>
                                 </div>
                                 <div class="media contact-info">
                                     <span class="contact-info__icon"><i class="ti-email"></i></span>
                                     <div class="media-body">
-                                        <h3>support@colorlib.com</h3>
-                                        <p>Send us your query anytime!</p>
+                                        <h3 style="word-wrap: break-word;">quyengopyeuthuong@gmail.com</h3>
+                                        <p style="word-wrap: break-word;">Hãy gửi thư cho chúng tôi nêú bạn có bất kì
+                                            câu hỏi nào</p>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +138,6 @@
 
 
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- footer_start  -->
     <%- include('./../common/footer') -%>
     <!-- footer_end  -->

@@ -26,6 +26,22 @@ export class CampaignService {
       .execute();
   }
 
+  getTopArticles(number: number) {
+    return this.campaignRepository
+      .createQueryBuilder()
+      .select([
+        'id',
+        'name',
+        'thumbnail',
+        'description',
+        'slug',
+        'status',
+        'created_at',
+      ])
+      .limit(number)
+      .execute();
+  }
+
   getCampaignById(id: number) {
     return this.campaignRepository.findOne({ id });
   }
@@ -43,7 +59,7 @@ export class CampaignService {
       { id: idOfCampaign },
       {
         ...updateCampaignDto,
-        slug: getSlug(updateCampaignDto.name + '-' + Date.now()),
+        slug: getSlug(updateCampaignDto.name),
       },
     );
   }

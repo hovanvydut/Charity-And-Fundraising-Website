@@ -26,7 +26,7 @@ export class ArticleRepository extends Repository<Article> {
     article.content = content;
     article.thumbnail = thumbnail;
     article.author = user;
-    article.slug = getSlug(`${article.title}-${Date.now()}`);
+    article.slug = getSlug(`${article.title}`);
     article.category = category;
 
     try {
@@ -59,7 +59,7 @@ export class ArticleRepository extends Repository<Article> {
     article.description = description;
     article.content = content;
     article.thumbnail = thumbnail;
-    article.slug = getSlug(`${article.title}-${Date.now()}`);
+    article.slug = getSlug(`${article.title}`);
 
     await this.createQueryBuilder()
       .update()
@@ -89,7 +89,7 @@ export class ArticleRepository extends Repository<Article> {
       .getMany();
   }
 
-  getThumbnailArticle(conditionQuery: ConditionQuery) {
+  getThumbnailArticle(conditionQuery: ConditionQuery, limit?: number) {
     const query = this.createQueryBuilder('article')
       .select([
         'user.name',
@@ -118,6 +118,10 @@ export class ArticleRepository extends Repository<Article> {
 
     if (conditionQuery.titleSlug)
       query.where({ slug: Like(conditionQuery.titleSlug) });
+
+    if (limit) {
+      query.limit(limit);
+    }
 
     return query.orderBy('article.created_at', 'DESC').getMany();
   }

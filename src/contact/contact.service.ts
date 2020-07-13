@@ -44,6 +44,7 @@ export class ContactService {
   }
 
   updateContactMessage(updateContactMessageDto: UpdateContactMessageDto) {
+    console.log(updateContactMessageDto);
     const { id, ...record } = updateContactMessageDto;
     return this.contactMessageRepository.update({ id: Number(id) }, record);
   }

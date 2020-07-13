@@ -34,8 +34,8 @@ export class BlogService {
     return this.articleRepository.getAllArticles();
   }
 
-  getThumbnailArticle(conditionQuery: ConditionQuery) {
-    return this.articleRepository.getThumbnailArticle(conditionQuery);
+  getThumbnailArticle(conditionQuery: ConditionQuery, limit?: number) {
+    return this.articleRepository.getThumbnailArticle(conditionQuery, limit);
   }
 
   getArticleById(idOfArticleNeedEdit: number) {

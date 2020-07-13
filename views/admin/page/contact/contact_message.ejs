@@ -8,7 +8,7 @@
   <%- include('./../../partials/header') -%>
   <link href="assets\libs\toastr\toastr.min.css" rel="stylesheet" type="text/css">
   <style>
-    tbody>tr:first-child>td {
+    tbody>tr>td[onClick] {
       cursor: pointer;
     }
   </style>
@@ -76,16 +76,19 @@
                           <th>Tên</th>
                           <th>Chủ đề</th>
                           <th>Ngày</th>
+                          <th>Note</th>
                         </tr>
                       </thead>
                       <tbody>
                         <% contactMessages ? contactMessages.forEach((contact, index) => { %>
                         <tr>
                           <th scope="row"><%= index + 1%></th>
-                          <td onclick="editContactMessage.call(this,event)" data-messageid="<%= contact.id %>">
+                          <td class="contactName" onclick="editContactMessage.call(this,event)"
+                            data-messageid="<%= contact.id %>">
                             <%= contact.name %></td>
                           <td><%= contact.subject %></td>
                           <td><%= new Date(contact.created_at).toLocaleString() %></td>
+                          <td><%= contact.note %></td>
                         </tr>
                         <%}) : null%>
                       </tbody>
@@ -221,6 +224,8 @@
           name,
           subject,
           info,
+          note,
+          status,
           message,
           created_at
         } = response.contactMessages;
@@ -229,6 +234,8 @@
         $('#subjectInput').val(subject);
         $('#messageInput').val(message);
         $('#infoInput').val(info);
+        $('#statusInput').val(status);
+        $('#noteInput').val(note)
       }).catch(error => {
         console.log(error);
       })
@@ -238,7 +245,7 @@
       event.preventDefault();
 
       Swal.fire({
-        title: 'Xóa tag',
+        title: 'Xóa',
         text: "Bạn chắc chắn chứ",
         icon: 'warning',
         showCancelButton: true,
@@ -252,7 +259,7 @@
             url: `/admin/contact/contact-message/${messageId}`,
             method: 'DELETE',
           }).then(response => {
-            $(`.tagName[data-messageid="${messageId}"]`).closest('tr').remove();
+            $(`.contactName[data-messageid="${messageId}"]`).closest('tr').remove();
             $('#editContactMessageModal').modal('toggle');
             swal('Đã xóa', '', 'success')
             Array.from($('#contactMessageTable>tbody>tr>th')).forEach((elm, idx) => elm.innerHTML = idx + 1)
@@ -280,8 +287,8 @@
       }).then(response => {
         $('#editContactMessageModal').modal('toggle');
         swal('Đã cập nhật', '', 'success')
-        $(`tbody>tr>td[data-messageid="${record.id}"]`).text(record.name)
-        $(`tbody>tr>td[data-messageid="${record.id}"]~td`).text(record.subject)
+        $(`.contactName[data-messageid="${record.id}"]`).text(record.name)
+        $(`.contactName[data-messageid="${record.id}"]~td`).text(record.subject)
       }).catch(error => {
         swal('Lỗi', error.message, 'error')
       })

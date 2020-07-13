@@ -18,7 +18,8 @@ export class ClientController {
   @Render('client/page/index')
   async homePage() {
     const campaignList = await this.campaignService.getAllCampaignThumb();
-    return { campaignList };
+    const topArticles = await this.blogService.getThumbnailArticle({}, 3);
+    return { campaignList, topArticles };
   }
 
   @Get('/about')
@@ -47,7 +48,6 @@ export class ClientController {
     const articleDatas = await this.clientService.getAllThumbArticleWithQuery(
       queryBlogDto,
     );
-    console.log(articleDatas);
     const tags = await this.blogService.getAllTags();
     const categories = await this.blogService.getAllCategories();
     return {
@@ -61,7 +61,9 @@ export class ClientController {
   @Render('client/page/single_blog')
   async viewSingleBlog(@Param('slug') slug: string) {
     const articleData = await this.blogService.getArticleBySlug(slug);
-    return { articleData };
+    const tags = await this.blogService.getAllTags();
+    const categories = await this.blogService.getAllCategories();
+    return { articleData, tags, categories };
   }
 
   @Get('/campaign')
