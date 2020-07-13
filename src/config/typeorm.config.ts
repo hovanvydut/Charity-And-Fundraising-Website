@@ -13,7 +13,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: '912b7a48de6f62aaff2377e4438403e2f2e9357bbd298f029d891c4126f57376',
   database: 'df1ds8sa5m9lpc',
   entities: ['dist/**/*.entity{.ts,.js}'],
-  synchronize: false,
+  synchronize: true,
   ssl: {
     rejectUnauthorized: false,
   },
