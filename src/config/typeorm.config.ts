@@ -17,4 +17,8 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   ssl: {
     rejectUnauthorized: false,
   },
+  migrations: [__dirname + '../migrations/**/*{.ts,.js}'],
+  cli: {
+    migrationsDir: 'src/migrations',
+  },
 };
