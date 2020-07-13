@@ -2,7 +2,7 @@ require('dotenv').config();
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { Logger, Req } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as flash from 'connect-flash-plus';
 import * as session from 'express-session';
@@ -14,6 +14,7 @@ import * as config from 'config';
 async function bootstrap() {
   console.log(process.env);
   const serverConfig = config.get('server');
+  const dbConfig = config.get('db');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');
 
@@ -21,8 +22,8 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
 
-  const connectDBString =
-    'postgres://postgres:123456@127.0.0.1:5432/Charity_Fundraising';
+  const connectDBString = process.env.DB_URI || dbConfig.URI;
+
   app.use(
     session({
       store: new (PostgreSqlStore(session))({
