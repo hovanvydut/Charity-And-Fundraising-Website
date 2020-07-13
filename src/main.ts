@@ -10,6 +10,7 @@ import passport = require('passport');
 import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
 import * as config from 'config';
+import { connect } from 'http2';
 
 async function bootstrap() {
   console.log(process.env);
@@ -22,12 +23,16 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
 
-  const connectDBString = process.env.DB_URI || dbConfig.URI;
-
+  const connectDBString = process.env.DB_URI || dbConfig.uri;
   app.use(
     session({
       store: new (PostgreSqlStore(session))({
-        conString: connectDBString,
+        conObject: {
+          connectionString: connectDBString,
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
       secret: 'secretSession',
       resave: true,
