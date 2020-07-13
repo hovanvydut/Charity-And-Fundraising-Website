@@ -6,5 +6,10 @@ db:
   port: 5432
   database: 'Charity_Fundraising'
 
+cloudinary:
+  name: 'dgext7ewd'
+  api_key: '354796774142827'
+  api_secret: 'LED5qjG68iato7AaukhhhblY2CI'
+
 jwt:
   expiresIn: 3600

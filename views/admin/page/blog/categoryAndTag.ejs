@@ -81,7 +81,7 @@
                         <tr>
                           <th scope="row"><%= index + 1%></th>
                           <td class="categoryName" onclick="editCategory.call(this, event)"
-                            data-categoryid="<%= category.id %>"><%= category.name %></td>
+                            data-categoryid="<%= category.id %>"><%= category.name %> (<%= category.articles %>)</td>
                         </tr>
                         <%}) : null%>
                       </tbody>

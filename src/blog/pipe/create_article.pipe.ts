@@ -14,6 +14,7 @@ export class CreateArticlePipe implements PipeTransform<any> {
       return value;
     }
     value.category = Number(value.category);
+    console.log(value.tags);
     value.tags = value.tags.map(tagId => Number(tagId));
     const object = plainToClass(metatype, value);
     const errors = await validate(object);

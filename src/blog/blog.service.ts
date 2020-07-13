@@ -68,7 +68,12 @@ export class BlogService {
   }
 
   getAllCategories() {
-    return this.categoryRepository.find({ order: { created_at: 'DESC' } });
+    // return this.categoryRepository.find({ order: { created_at: 'DESC' } });
+    return this.categoryRepository
+      .createQueryBuilder('category')
+      .leftJoinAndSelect('category.articles', 'article')
+      .loadRelationCountAndMap('category.articles', 'category.articles')
+      .getMany();
   }
 
   updateCategory(updateCategoryDto: UpdateCategoryDto) {

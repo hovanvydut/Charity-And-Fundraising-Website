@@ -5,5 +5,10 @@ db:
   password: 'aaacc8ee26376d2ed0a9012167e7a64a7c58ab21c9ea6383ab7a507ab0861539'
   synchronize: true
 
+cloudinary:
+  name: 'dgext7ewd'
+  api_key: '354796774142827'
+  api_secret: 'LED5qjG68iato7AaukhhhblY2CI'
+
 jwt:
   secret: 'vySecret'

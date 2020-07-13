@@ -100,6 +100,7 @@ export class BlogController {
       folder: 'Charity_And_Fundraising/upload/article',
     });
     const thumbnailUrl = uploadedImg.url;
+    console.log(thumbnailUrl);
     fs.unlinkSync(file.path);
     return { location: thumbnailUrl };
   }

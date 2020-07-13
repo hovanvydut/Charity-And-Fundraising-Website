@@ -50,6 +50,7 @@ export class ClientController {
     );
     const tags = await this.blogService.getAllTags();
     const categories = await this.blogService.getAllCategories();
+    console.log(categories);
     return {
       articleDatas,
       tags,
