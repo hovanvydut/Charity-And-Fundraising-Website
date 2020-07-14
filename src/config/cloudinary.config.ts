@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 import * as config from 'config';
 
