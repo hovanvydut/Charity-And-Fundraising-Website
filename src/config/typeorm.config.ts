@@ -5,7 +5,7 @@ import * as config from 'config';
 const dbConfig = config.get('db');
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
-  type: dbConfig.type,
+  type: process.env.DB_TYPE || dbConfig.type,
   host: process.env.DB_HOSTNAME || dbConfig.host,
   port: process.env.PORT || dbConfig.port,
   username: process.env.DB_USERNAME || dbConfig.username,
