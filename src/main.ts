@@ -45,7 +45,7 @@ async function bootstrap() {
   app.use(methodOverride('_method'));
   const port = process.env.PORT || 3000;
   console.log(port);
-  await app.listen(port, process.env.LOCAL_ADDRESS || '0.0.0.0');
+  await app.listen(port);
   logger.log(`Application listening on port ${port}`);
 }
 bootstrap();
