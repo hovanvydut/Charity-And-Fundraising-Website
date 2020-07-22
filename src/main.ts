@@ -10,7 +10,7 @@ import passport = require('passport');
 import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
 import * as config from 'config';
-import { connect } from 'http2';
+console.log(process.env.PORT);
 
 async function bootstrap() {
   const serverConfig = config.get('server');
@@ -44,7 +44,6 @@ async function bootstrap() {
   app.use(passport.session());
   app.use(flash());
   app.use(methodOverride('_method'));
-
   const port = process.env.PORT || 3000;
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
