@@ -44,7 +44,6 @@ async function bootstrap() {
   app.use(flash());
   app.use(methodOverride('_method'));
   const port = process.env.PORT || 3000;
-  console.log(port);
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
 }
