@@ -12,7 +12,7 @@ import * as methodOverride from 'method-override';
 import * as config from 'config';
 console.log(process.env.PORT);
 async function bootstrap() {
-  const serverConfig = config.get('server');
+  // const serverConfig = config.get('server');
   const dbConfig = config.get('db');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');
@@ -47,4 +47,5 @@ async function bootstrap() {
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
 }
+
 bootstrap();
