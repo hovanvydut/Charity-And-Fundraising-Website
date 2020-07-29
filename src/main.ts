@@ -10,6 +10,8 @@ import passport = require('passport');
 import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
 
+console.log(process.env);
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');

@@ -1,9 +1,0 @@
-db:
-  host: 'localhost'
-  username: 'postgres'
-  uri: 'postgres://postgres:123456@127.0.0.1:5432/Charity_Fundraising'
-  password: 123456
-  synchronize: true
-
-jwt:
-  secret: 'vySecret'

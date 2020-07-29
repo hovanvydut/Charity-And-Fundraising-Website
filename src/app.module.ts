@@ -9,17 +9,17 @@ import { BlogModule } from './blog/blog.module';
 import { ContactModule } from './contact/contact.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { typeOrmConfig } from './config/typeorm.config';
-import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
+// import { ConfigModule } from '@nestjs/config';
+// import configuration from './config/configuration';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      ignoreEnvFile: true,
-      load: [configuration],
-    }),
+    // ConfigModule.forRoot({
+    //   isGlobal: true,
+    //   ignoreEnvFile: true,
+    //   load: [configuration],
+    // }),
     AuthModule,
     UserModule,
     AdminModule,
