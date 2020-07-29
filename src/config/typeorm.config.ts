@@ -3,11 +3,11 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: process.env.DB_HOSTNAME,
-  port: +process.env.PORT,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: 'arjuna.db.elephantsql.com' || process.env.DB_HOSTNAME,
+  port: 5432 || +process.env.PORT,
+  username: 'yjcrmgct' || process.env.DB_USERNAME,
+  password: '0ETzEiPPF6nwvz12q8DoauCOPubACy6T' || process.env.DB_PASSWORD,
+  database: 'yjcrmgct' || process.env.DB_NAME,
   entities: ['dist/**/*.entity{.ts,.js}'],
   synchronize: true,
   ssl: {
