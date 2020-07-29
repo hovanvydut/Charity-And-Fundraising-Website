@@ -82,7 +82,7 @@
                     <input name="thumbnail" class="form-control mb-3" type="text" id="thumbnail"
                       value="<%= articleData ? articleData.thumbnail : ''%>">
                     <img id="imgThumbnail" src=<%= articleData ? articleData.thumbnail : '' %> class="mr-auto ml-auto"
-                      alt="">
+                      alt="" style="max-width: 100%">
                   </div>
 
                   <div class="card-body">
@@ -257,7 +257,8 @@
     });
     $(document).ready(function () {
       console.log($('#selectedTagAndCategory').data('category'))
-      $('#tagsSelect').val($('#selectedTagAndCategory').data('tags').split(','));
+      const tagData = $('#selectedTagAndCategory').data('tags');
+      $('#tagsSelect').val(typeof tagData === 'number' ? [tagData] : tagData.split(','));
       $('#tagsSelect').trigger('change');
       $('#categorySelect').val($('#selectedTagAndCategory').data('category'));
       $('#categorySelect').trigger('change');

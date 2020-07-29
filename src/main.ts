@@ -9,12 +9,8 @@ import * as session from 'express-session';
 import passport = require('passport');
 import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
-import * as config from 'config';
-console.log(process.env.PORT);
-console.log(process.env);
+
 async function bootstrap() {
-  // const serverConfig = config.get('server');
-  const dbConfig = config.get('db');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('bootstrap');
 
@@ -22,11 +18,7 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
 
-  const connectDBString =
-    'postgres://yjcrmgct:0ETzEiPPF6nwvz12q8DoauCOPubACy6T@arjuna.db.elephantsql.com:5432/yjcrmgct' ||
-    process.env.DB_URI ||
-    dbConfig.uri;
-  console.log(connectDBString);
+  const connectDBString = process.env.DB_URI;
   app.use(
     session({
       store: new (PostgreSqlStore(session))({
