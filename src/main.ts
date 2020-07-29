@@ -11,6 +11,7 @@ import * as PostgreSqlStore from 'connect-pg-simple';
 import * as methodOverride from 'method-override';
 import * as config from 'config';
 console.log(process.env.PORT);
+console.log(process.env);
 async function bootstrap() {
   // const serverConfig = config.get('server');
   const dbConfig = config.get('db');
