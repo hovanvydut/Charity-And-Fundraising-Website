@@ -22,7 +22,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
 
-  const connectDBString = process.env.DB_URI || dbConfig.uri;
+  const connectDBString =
+    'postgres://yjcrmgct:0ETzEiPPF6nwvz12q8DoauCOPubACy6T@arjuna.db.elephantsql.com:5432/yjcrmgct' ||
+    process.env.DB_URI ||
+    dbConfig.uri;
   console.log(connectDBString);
   app.use(
     session({
