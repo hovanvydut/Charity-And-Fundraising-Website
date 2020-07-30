@@ -41,6 +41,8 @@ import { UpdateCategoryDto } from './dto/update_category.dto';
 import { FlashMessageDto } from 'src/user/dto/flash_message';
 import { CreateArticlePipe } from './pipe/create_article.pipe';
 import { UpdateArticlePipe } from './pipe/update_article.pipe';
+import DiscordLogger from 'src/config/logger/discord.logger';
+import { MessageDiscordLogger } from 'src/config/logger/message.discord.logger.dto';
 const tinyAPIKey = '2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov';
 
 @Controller('admin/blog')
@@ -48,6 +50,8 @@ const tinyAPIKey = '2915bg1q653j3923vjzn1e30iaq6aijt5sd0c429mcvdh9ov';
 @UseGuards(AuthenticatedGuard, RolesGuard)
 @UseFilters(AuthExceptionFilter)
 export class BlogController {
+  private discordLogger = new DiscordLogger();
+
   constructor(private blogService: BlogService) {}
   //! Viet interceptor dinh kem object message flash each response
 
@@ -89,6 +93,13 @@ export class BlogController {
     @Req() req,
   ) {
     await this.blogService.saveArticle(createArticleDto, user);
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[user.role]} @${user.name} has created NEW ARTICLE #${
+        createArticleDto.title
+      } #email: ${user.email}`,
+    );
+    this.discordLogger.log(logMessage);
     req.flash('message', ['success', 'Bài viết đã lưu']);
   }
 
@@ -148,10 +159,18 @@ export class BlogController {
     @Body(UpdateArticlePipe) updateArticleDto: UpdateArticleDto,
     @Req() req,
     @Res() res,
+    @GetUser() user: User,
   ) {
-    console.log(updateArticleDto);
     await this.blogService.updateArticle(idOfArticleNeedEdit, updateArticleDto);
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[user.role]} @${user.name} UPDATE ARTICLE #${
+        updateArticleDto.title
+      } #email: ${user.email}`,
+    );
+    this.discordLogger.log(logMessage);
     req.flash('message', ['success', 'Cập nhật bài viết thành công']);
+
     return res.redirect(`/admin/blog/articles/${idOfArticleNeedEdit}/edit`);
   }
 
@@ -160,9 +179,20 @@ export class BlogController {
     @Param('id', ParseIntPipe) idOfArticleNeedDelete: number,
     @Req() req,
     @Res() res,
+    @GetUser() user: User,
   ) {
     await this.blogService.deleteArticle(idOfArticleNeedDelete);
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[user.role]} @${
+        user.name
+      } DELETE ARTICLE which has id = ${idOfArticleNeedDelete} #email: ${
+        user.email
+      }`,
+    );
+    this.discordLogger.log(logMessage);
     req.flash('message', ['success', 'Xóa bài viết thành công']);
+
     return res.redirect(`/admin/blog/articles`);
   }
 

@@ -36,12 +36,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import cloudinary from './../config/cloudinary.config';
 import { multerOptions } from 'src/config/multer.config.';
 import * as fs from 'fs';
+import DiscordLogger from 'src/config/logger/discord.logger';
+import { MessageDiscordLogger } from 'src/config/logger/message.discord.logger.dto';
 
 @Controller('admin/manageusers')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
 @UseGuards(AuthenticatedGuard, RolesGuard)
 @UseFilters(AuthExceptionFilter)
 export class UserController {
+  private discordLogger = new DiscordLogger();
+
   constructor(
     private userService: UserService,
     private sessionService: SessionService,
@@ -78,7 +82,17 @@ export class UserController {
   ) {
     try {
       await this.userService.createUser(createUserDto, currentUser);
+
+      const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+        `${RoleEnum[currentUser.role]} @${
+          currentUser.name
+        } CREATE NEW USER who has email: ${createUserDto.email} and role: ${
+          RoleEnum[currentUser.role]
+        } #email: ${currentUser.email}`,
+      );
+      this.discordLogger.log(logMessage);
       req.flash('message', ['success', 'Tạo người dùng thành công']);
+
       return res.redirect('general');
     } catch (error) {
       req.flash('message', ['error', error.message]);
@@ -112,6 +126,16 @@ export class UserController {
   ) {
     try {
       await this.userService.updateUser(id, updateUserDto, currentUser);
+
+      const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+        `${RoleEnum[currentUser.role]} @${
+          currentUser.name
+        } UPDATE USER who has email: ${updateUserDto.email} and role: ${
+          RoleEnum[updateUserDto.role]
+        } #email: ${currentUser.email}`,
+      );
+      this.discordLogger.log(logMessage);
+
       if (currentUser.id === id)
         req.session.passport.user = {
           ...req.session.passport.user,
@@ -133,14 +157,22 @@ export class UserController {
   @Delete('/:id/delete')
   async deleteUser(
     @Param('id', ParseIntPipe) id: number,
-    @GetUser() currentUSer: User,
+    @GetUser() currentUser: User,
     @Res() res,
     @Req() req,
   ) {
     try {
-      await this.userService.deleteUser(id, currentUSer);
+      await this.userService.deleteUser(id, currentUser);
       await this.sessionService.destroyByUserId(id);
+
+      const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+        `${RoleEnum[currentUser.role]} @${
+          currentUser.name
+        } DELETE USER who has id: ${id} #email: ${currentUser.email}`,
+      );
+      this.discordLogger.log(logMessage);
       req.flash('message', ['success', 'Xóa thành công']);
+
       return res.redirect('/admin/manageusers/general');
     } catch (error) {
       req.flash('message', ['error', error.message]);

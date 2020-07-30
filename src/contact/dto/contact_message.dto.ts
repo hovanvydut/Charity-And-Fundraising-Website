@@ -14,6 +14,6 @@ export class ContactMessageDto {
   subject: string;
 
   @IsString()
-  @MinLength(20)
+  @MinLength(1)
   message: string;
 }

@@ -30,12 +30,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import cloudinary from './../config/cloudinary.config';
 import { multerOptions } from 'src/config/multer.config.';
 import * as fs from 'fs';
+import { MessageDiscordLogger } from 'src/config/logger/message.discord.logger.dto';
+import DiscordLogger from 'src/config/logger/discord.logger';
 
 @Controller('admin/campaign')
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
 @UseGuards(AuthenticatedGuard, RolesGuard)
 @UseFilters(AuthExceptionFilter)
 export class CampaignController {
+  private discordLogger = new DiscordLogger();
+
   constructor(private campaignService: CampaignService) {}
 
   @Post('/upload-image')
@@ -82,12 +86,23 @@ export class CampaignController {
   async createCampaign(
     @Body() createCampaignDto: CreateCampaignDto,
     @Res() res,
+    @GetUser() currentUser,
   ) {
     if (!createCampaignDto.thumbnail) delete createCampaignDto.thumbnail;
     const returnedData = await this.campaignService.createCampaign(
       createCampaignDto,
     );
     const campaign = returnedData.generatedMaps[0];
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[currentUser.role]} @${
+        currentUser.name
+      } CREATE NEW CAMPAIGN (${createCampaignDto.name}) #email: ${
+        currentUser.email
+      }`,
+    );
+    this.discordLogger.log(logMessage);
+
     return res.redirect(`/admin/campaign/${campaign.id}/edit`);
   }
 
@@ -112,9 +127,18 @@ export class CampaignController {
     @Body() updateCampaignDto,
     @Req() req,
     @Res() res,
+    @GetUser() currentUser,
   ) {
     await this.campaignService.updateCampaign(idOfCampaign, updateCampaignDto);
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[currentUser.role]} @${currentUser.name} UPDATE CAMPAIGN: ${
+        updateCampaignDto.name
+      } #email: ${currentUser.email}`,
+    );
+    this.discordLogger.log(logMessage);
     req.flash('message', ['success', 'Cập nhật thành công']);
+
     res.redirect(`/admin/campaign/${idOfCampaign}/edit`);
   }
 
@@ -123,8 +147,16 @@ export class CampaignController {
     @Param('id', ParseIntPipe) id: number,
     @Req() req,
     @Res() res,
+    @GetUser() currentUser,
   ) {
     await this.campaignService.deleteById(id);
+
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `${RoleEnum[currentUser.role]} @${
+        currentUser.name
+      } DELETE CAMPAIGN which has id = ${id} #email: ${currentUser.email}`,
+    );
+    this.discordLogger.log(logMessage);
     req.flash('message', ['success', 'Xóa chiến dịch thành công']);
     res.redirect('/admin/campaign/general');
   }

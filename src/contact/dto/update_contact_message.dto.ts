@@ -17,7 +17,7 @@ export class UpdateContactMessageDto {
   subject: string;
 
   @IsString()
-  @MinLength(20)
+  @MinLength(1)
   message: string;
 
   @IsString()

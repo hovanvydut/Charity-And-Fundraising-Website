@@ -27,12 +27,16 @@ import { RoleEnum } from 'src/user/other/user_role.enum';
 import { AuthExceptionFilter } from 'src/auth/filter/auth_exceptions.filter';
 import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
+import DiscordLogger from 'src/config/logger/discord.logger';
+import { MessageDiscordLogger } from 'src/config/logger/message.discord.logger.dto';
 
 @Controller()
 @Roles(RoleEnum.ADMIN, RoleEnum.MOD)
 @UseGuards(AuthenticatedGuard, RolesGuard)
 @UseFilters(AuthExceptionFilter)
 export class ContactController {
+  private discordLogger = new DiscordLogger();
+
   constructor(private contactService: ContactService) {}
 
   @Post('/contact/contact-message')
@@ -40,6 +44,11 @@ export class ContactController {
     @Body(new ContactMessageValidationPipe())
     contactMessageDto: ContactMessageDto,
   ) {
+    const logMessage: MessageDiscordLogger = new MessageDiscordLogger(
+      `There is a NEW CONTACT MESSAGE`,
+    );
+    this.discordLogger.log(logMessage);
+
     return this.contactService.saveContactMessage(contactMessageDto);
   }
 
