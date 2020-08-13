@@ -27,6 +27,7 @@ export class CreateUserValidationPipe implements PipeTransform<any> {
       this.logger.error(errors, null, 'CreateUserValidationPipe');
       throw new BadRequestException('Validation failed');
     }
+
     return value;
   }
 

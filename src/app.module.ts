@@ -10,18 +10,14 @@ import { ContactModule } from './contact/contact.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { typeOrmConfig } from './config/typeorm.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-// import { ConfigModule } from '@nestjs/config';
-// import configuration from './config/configuration';
 
 @Module({
   imports: [
-    CacheModule.register(),
+    CacheModule.register({
+      ttl: 3600,
+      max: 20,
+    }),
     TypeOrmModule.forRoot(typeOrmConfig),
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    //   ignoreEnvFile: true,
-    //   load: [configuration],
-    // }),
     AuthModule,
     UserModule,
     AdminModule,
