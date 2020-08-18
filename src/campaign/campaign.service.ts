@@ -11,6 +11,10 @@ export class CampaignService {
     private campaignRepository: CampaignRepository,
   ) {}
 
+  countCampaigns() {
+    return this.campaignRepository.count();
+  }
+
   findBy(condition: object) {
     return this.campaignRepository.findOne(condition);
   }

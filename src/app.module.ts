@@ -1,4 +1,4 @@
-import { Module, CacheModule, CacheInterceptor } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
@@ -13,10 +13,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
-    CacheModule.register({
-      ttl: 3600,
-      max: 20,
-    }),
     TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
     UserModule,
@@ -26,12 +22,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     BlogModule,
     ContactModule,
     CampaignModule,
-  ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
   ],
 })
 export class AppModule {}

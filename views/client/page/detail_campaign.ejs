@@ -57,7 +57,7 @@
 
                             <div class="balance d-flex justify-content-between align-items-center">
                                 <span><%= deatailCampaign ? deatailCampaign.status : '' %></span>
-                                <span><%= deatailCampaign ? new Date(deatailCampaign.created_at).toLocaleString() : '' %></span>
+                                <span><%= deatailCampaign ? `${new Date(deatailCampaign.created_at).getDate()}/${new Date(deatailCampaign.created_at).getMonth() + 1}/${new Date(deatailCampaign.created_at).getFullYear()}` : '' %></span>
                             </div>
                         </div>
 
@@ -124,6 +124,16 @@
                                         <h3 style="word-wrap: break-word;">quyengopyeuthuong@gmail.com</h3>
                                         <p style="word-wrap: break-word;">Hãy gửi thư cho chúng tôi nêú bạn có bất kì
                                             câu hỏi nào</p>
+                                    </div>
+                                </div>
+                                <div class="media contact-info">
+                                    <span class="contact-info__icon"><i class="ti-facebook"></i></span>
+                                    <div class="media-body">
+                                        <h3 style="word-wrap: anywhere"><a
+                                                href="https://www.facebook.com/Quy%C3%AAn-G%C3%B3p-Y%C3%AAu-Th%C6%B0%C6%A1ng-111523043958723/">Fanpage
+                                                Quyên Góp Yêu Thương</a></h3>
+                                        <p style="word-wrap: anywhere">Nơi kết nối mọi người chung ước muốn giúp đỡ mọi
+                                            người.</p>
                                     </div>
                                 </div>
                             </div>

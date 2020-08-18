@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-console.log(process.env.DB_PASSWORD);
-
 module.exports = {
   type: process.env.DB_TYPE,
   host: process.env.DB_HOSTNAME,

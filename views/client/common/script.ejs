@@ -1,4 +1,18 @@
 <!-- JS here -->
+<script>
+  document.onreadystatechange = function first() {
+    if (document.readyState !== 'complete') {
+      // document.querySelector('body').style.visibility = 'hidden';
+      document.querySelector('#loader').style.visibility = 'visible';
+    } else {
+      setTimeout(() => {
+        document.querySelector('#loader').style.display = 'none';
+      }, 1000)
+      // document.querySelector('body').style.visibility = 'visible';
+    }
+  };
+</script>
+<script src="js/lazysizes.min.js" async></script>
 <script src="js/vendor/modernizr-3.5.0.min.js"></script>
 <script src="js/vendor/jquery-1.12.4.min.js"></script>
 <script src="js/popper.min.js"></script>

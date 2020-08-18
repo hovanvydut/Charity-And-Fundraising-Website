@@ -5,21 +5,44 @@ import { stringify } from 'querystring';
 import { ClientService } from './client.service';
 import { QueryBlogDto } from 'src/blog/dto/query_blog.dto';
 import { CampaignService } from 'src/campaign/campaign.service';
+import { UserService } from 'src/user/user.service';
+import { RoleEnum } from 'src/user/other/user_role.enum';
 
+const carouselImgs = [
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760761/Charity_And_Fundraising/upload/carousel/4_zhaebu.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760760/Charity_And_Fundraising/upload/carousel/2_ojuzyw.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760762/Charity_And_Fundraising/upload/carousel/9_pprcwn.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760763/Charity_And_Fundraising/upload/carousel/12_c7nvek.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760763/Charity_And_Fundraising/upload/carousel/13_yv6zdj.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760763/Charity_And_Fundraising/upload/carousel/7_eipbof.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760765/Charity_And_Fundraising/upload/carousel/10_szpt4r.jpg',
+  'https://res.cloudinary.com/dgext7ewd/image/upload/v1597760761/Charity_And_Fundraising/upload/carousel/6_pfd3aq.jpg',
+];
 @Controller()
 export class ClientController {
   constructor(
     private blogService: BlogService,
     private clientService: ClientService,
     private campaignService: CampaignService,
+    private userService: UserService,
   ) {}
 
   @Get()
   @Render('client/page/index')
   async homePage() {
     const campaignList = await this.campaignService.getAllCampaignThumb();
-    const topArticles = await this.blogService.getThumbnailArticle({}, 3);
-    return { campaignList, topArticles };
+    const topArticles = await this.blogService.getThumbnailArticle({}, 4);
+
+    let volunteers = await this.userService.getUsers({
+      role: RoleEnum.VOLUNTEER,
+    });
+    volunteers = volunteers
+      ? volunteers.map(people => {
+          const { name, avatar, email } = people;
+          return { name, avatar, email };
+        })
+      : [];
+    return { campaignList, topArticles, volunteers, carouselImgs };
   }
 
   @Get('/about')
@@ -50,11 +73,15 @@ export class ClientController {
     );
     const tags = await this.blogService.getAllTags();
     const categories = await this.blogService.getAllCategories();
-    console.log(categories);
+
     return {
       articleDatas,
       tags,
       categories,
+      topArticles: articleDatas.slice(
+        0,
+        articleDatas.length > 3 ? 3 : articleDatas.length,
+      ),
     };
   }
 
@@ -64,7 +91,8 @@ export class ClientController {
     const articleData = await this.blogService.getArticleBySlug(slug);
     const tags = await this.blogService.getAllTags();
     const categories = await this.blogService.getAllCategories();
-    return { articleData, tags, categories };
+    const topArticles = await this.blogService.getThumbnailArticle({}, 4);
+    return { articleData, tags, categories, topArticles };
   }
 
   @Get('/campaign')

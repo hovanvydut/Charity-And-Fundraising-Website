@@ -15,6 +15,10 @@ export class UserService {
     @InjectRepository(User) private userRepository: UserRepository,
     private sessionService: SessionService,
   ) {}
+  
+  async countVolunteers() {
+    return this.userRepository.count({role: RoleEnum.VOLUNTEER})
+  }
 
   async findOne(condition = {}): Promise<User | undefined> {
     return this.userRepository.findOne(condition);

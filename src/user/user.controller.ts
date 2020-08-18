@@ -214,11 +214,8 @@ export class UserController {
         ...req.session.passport.user,
         ...updateUserDto,
       };
-      req.session.save(function(error) {
-        !error
-          ? req.flash('message', ['success', 'Cập nhật thành công'])
-          : req.flash('message', ['error', error.message]);
-      });
+      await req.session.save();
+      req.flash('message', ['success', 'Cập nhật thành công']);
     } catch (error) {
       req.flash('message', ['error', error.message]);
     }

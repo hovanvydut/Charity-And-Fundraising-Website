@@ -90,7 +90,9 @@ export class ArticleRepository extends Repository<Article> {
   }
 
   getThumbnailArticle(conditionQuery: ConditionQuery, limit?: number) {
-    const query = this.createQueryBuilder('article')
+    const query = this.createQueryBuilder('article');
+
+    query
       .select([
         'user.name',
         'user.id',
@@ -103,7 +105,8 @@ export class ArticleRepository extends Repository<Article> {
         'category.id',
         'category.name',
       ])
-      .leftJoin('article.author', 'user');
+      .leftJoin('article.author', 'user')
+      .leftJoinAndSelect('article.tags', 'tag');
 
     if (conditionQuery.categorySlug)
       query.innerJoin('article.category', 'category', 'category.slug = :slug', {
@@ -111,17 +114,17 @@ export class ArticleRepository extends Repository<Article> {
       });
     else query.innerJoin('article.category', 'category');
 
-    if (conditionQuery.tagSlug)
-      query.innerJoin('article.tags', 'tag', 'tag.slug IN (:slug)', {
-        slug: conditionQuery.tagSlug,
-      });
-
-    if (conditionQuery.titleSlug)
-      query.where({ slug: Like(conditionQuery.titleSlug) });
+    // if (conditionQuery.tagSlug)
+    //   query.andWhere('(:slug) IN article.tags', {
+    //     slug: conditionQuery.tagSlug,
+    //   });
 
     if (limit) {
       query.limit(limit);
     }
+
+    if (conditionQuery.titleSlug)
+      query.where({ slug: Like(conditionQuery.titleSlug) });
 
     return query.orderBy('article.created_at', 'DESC').getMany();
   }
@@ -129,8 +132,9 @@ export class ArticleRepository extends Repository<Article> {
   findBySlug(slug: string) {
     return this.createQueryBuilder('article')
       .select([
-        'user.name',
         'user.id',
+        'user.name',
+        'user.avatar',
         'article.id',
         'article.title',
         'article.slug',
@@ -141,6 +145,7 @@ export class ArticleRepository extends Repository<Article> {
       ])
       .innerJoin('article.author', 'user')
       .where('article.slug = :slug', { slug })
+      .leftJoinAndSelect('article.tags', 'tag')
       .orderBy('article.created_at', 'DESC')
       .getOne();
   }

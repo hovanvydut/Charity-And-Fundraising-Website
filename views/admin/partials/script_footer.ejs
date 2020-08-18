@@ -1,4 +1,17 @@
 <!-- Vendor js -->
+<script>
+  document.onreadystatechange = function first() {
+    if (document.readyState !== 'complete') {
+      // document.querySelector('body').style.visibility = 'hidden';
+      document.querySelector('#loader').style.visibility = 'visible';
+    } else {
+      setTimeout(() => {
+        document.querySelector('#loader').style.display = 'none';
+      }, 1000)
+      // document.querySelector('body').style.visibility = 'visible';
+    }
+  };
+</script>
 <script src="assets\js\vendor.min.js"></script>
 
 <script src="assets\libs\moment\moment.min.js"></script>

@@ -6,6 +6,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Charifit</title>
     <%- include('./../common/header') -%>
+    <style>
+        #inputSearch {
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -42,10 +47,11 @@
                         <% articleDatas ? articleDatas.forEach((article, index) => { %>
                         <article class="blog_item">
                             <div class="blog_item_img">
-                                <img class="card-img rounded-0" src=<%= article.thumbnail %> alt="">
+                                <img class="card-img rounded-0 lazyload" src=<%= article.thumbnail %> alt="">
                                 <a href="#" class="blog_item_date">
-                                    <h3>15</h3>
-                                    <p>Jan</p>
+                                    <h3><%= new Date(article.created_at).getDate() %></h3>
+                                    <p><%= new Date(article.created_at).getMonth() + 1 %>/<%= new Date(article.created_at).getFullYear()%>
+                                    </p>
                                 </a>
                             </div>
 
@@ -56,13 +62,14 @@
                                 <p><%= article.description %></p>
                                 <ul class="blog-info-link">
                                     <li><a href="#"><i class="fa fa-user"></i><%= article.author.name %></a></li>
-                                    <li><a href="#"><i class="fa fa-comments"></i> 03 Comments</a></li>
+                                    <li><%= article.tags ? article.tags.map(tag => `#${tag.name} `).join(' ') : ''%>
+                                    </li>
                                 </ul>
                             </div>
                         </article>
                         <%}) : null%>
-
-                        <nav class="blog-pagination justify-content-center d-flex">
+                        <!-- PAGINATION -->
+                        <!-- <nav class="blog-pagination justify-content-center d-flex">
                             <ul class="pagination">
                                 <li class="page-item">
                                     <a href="#" class="page-link" aria-label="Previous">
@@ -81,7 +88,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </nav>
+                        </nav> -->
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -90,7 +97,7 @@
                             <form action="/blog" method="GET">
                                 <div class="form-group">
                                     <div class="input-group mb-3">
-                                        <input name="keyword" type="text" class="form-control"
+                                        <input id="inputSearch" name="keyword" type="text" class="form-control"
                                             placeholder='Từ khóa cần tìm kiếm' onfocus="this.placeholder = ''"
                                             onblur="this.placeholder = 'Từ khóa cần tìm kiếm'">
                                         <div class="input-group-append">
@@ -103,122 +110,47 @@
                         </aside>
 
                         <aside class="single_sidebar_widget post_category_widget">
-                            <h4 class="widget_title">Category</h4>
+                            <h4 class="widget_title">Danh mục</h4>
                             <ul class="list cat-list">
                                 <% categories ? categories.forEach((category) => { %>
                                 <li>
                                     <a href="/blog?category=<%= category.slug %>" class="d-flex">
-                                        <p><%= category.name %></p>
-                                        <p> (<%= category.articles %>)</p>
+                                        <p><b><%= category.name %></b> (<%= category.articles %>)</p>
                                     </a>
                                 </li>
                                 <% }) : ''%>
                             </ul>
                         </aside>
 
-                        <!-- RECENT POST -->
-                        <!-- <aside class="single_sidebar_widget popular_post_widget">
-                            <h3 class="widget_title">Recent Post</h3>
-                            <div class="media post_item">
-                                <img src="img/post/post_1.png" alt="post">
-                                <div class="media-body">
-                                    <a href="single-blog.html">
-                                        <h3>From life was you fish...</h3>
-                                    </a>
-                                    <p>January 12, 2019</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="img/post/post_2.png" alt="post">
-                                <div class="media-body">
-                                    <a href="single-blog.html">
-                                        <h3>The Amazing Hubble</h3>
-                                    </a>
-                                    <p>02 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="img/post/post_3.png" alt="post">
-                                <div class="media-body">
-                                    <a href="single-blog.html">
-                                        <h3>Astronomy Or Astrology</h3>
-                                    </a>
-                                    <p>03 Hours ago</p>
-                                </div>
-                            </div>
-                            <div class="media post_item">
-                                <img src="img/post/post_4.png" alt="post">
-                                <div class="media-body">
-                                    <a href="single-blog.html">
-                                        <h3>Asteroids telescope</h3>
-                                    </a>
-                                    <p>01 Hours ago</p>
-                                </div>
-                            </div>
-                        </aside> -->
-
                         <aside class="single_sidebar_widget tag_cloud_widget">
                             <h4 class="widget_title">Tag</h4>
                             <ul class="list">
                                 <% tags ? tags.forEach((tag) => { %>
                                 <li>
-                                    <a href="/blog?tag=<%= tag.slug %>"><%= tag.name %></a>
+                                    <a href="/blog?tag=<%= tag.slug %>"><b><%= tag.name %></b></a>
                                 </li>
                                 <% }) : '' %>
                             </ul>
                         </aside>
 
-
-                        <!-- INSTAGRAM FEEDS -->
-                        <!-- <aside class=" single_sidebar_widget instagram_feeds">
-                            <h4 class="widget_title">Instagram Feeds</h4>
-                            <ul class="instagram_row flex-wrap">
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_5.png" alt="">
+                        <!-- RECENT POST -->
+                        <aside class="single_sidebar_widget popular_post_widget">
+                            <h3 class="widget_title">Bài viết mới nhất</h3>
+                            <% topArticles ? topArticles.forEach(article => { %>
+                            <div class="media post_item">
+                                <img class="lazyload" style="width: 80px; height: 80px"
+                                    src="<%= article.thumbnail ? article.thumbnail : '' %>"
+                                    alt="<%= article.name ? article.name : '' %>">
+                                <div class="media-body">
+                                    <a href="/blog/<%= article.slug ? article.slug : '' %>">
+                                        <h3><%= article.title ? article.title : '' %></h3>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_6.png" alt="">
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_7.png" alt="">
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_8.png" alt="">
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_9.png" alt="">
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/post/post_10.png" alt="">
-                                    </a>
-                                </li>
-                            </ul>
-                        </aside> -->
-
-                        <!-- NEW LETTER -->
-                        <!-- <aside class="single_sidebar_widget newsletter_widget">
-                            <h4 class="widget_title">Newsletter</h4>
-
-                            <form action="#">
-                                <div class="form-group">
-                                    <input type="email" class="form-control" onfocus="this.placeholder = ''"
-                                        onblur="this.placeholder = 'Enter email'" placeholder='Enter email' required>
+                                    <p><%= article.created_at ? `${new Date(article.created_at).getDate()}/${new Date(article.created_at).getMonth() + 1}/${new Date(article.created_at).getFullYear()}` : '' %>
+                                    </p>
                                 </div>
-                                <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                    type="submit">Subscribe</button>
-                            </form>
-                        </aside> -->
+                            </div>
+                            <% }) : null %>
+                        </aside>
                     </div>
                 </div>
             </div>
@@ -247,9 +179,14 @@
                 rightIcon: '<span class="fa fa-clock-o"></span>'
             }
         });
-        $(document).ready(function () {
-            $('.js-example-basic-multiple').select2();
-        });
+        // $(document).ready(function () {
+        //     if ($('.js-example-basic-multiple')) {
+        //         $('.js-example-basic-multiple').select2();
+        //     }
+        // });
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        document.getElementById('inputSearch').value = params.get('keyword')
     </script>
 </body>
 

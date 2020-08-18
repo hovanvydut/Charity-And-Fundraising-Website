@@ -25,6 +25,10 @@ export class BlogService {
     @InjectRepository(TagRepository) private tagRepository: TagRepository,
   ) {}
 
+  async countArticles() {
+    return this.articleRepository.count();
+  }
+
   saveArticle(createArticleDto: CreateArticleDto, user: User): Promise<void> {
     if (!createArticleDto.thumbnail) delete createArticleDto.thumbnail;
     return this.articleRepository.saveArticle(createArticleDto, user);
