@@ -32,7 +32,7 @@
     "@types/express": "^4.17.3",
     "@types/node": "^13.9.1",
     "@types/passport-local": "^1.0.33",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "cache-manager": "^3.3.0",
     "class-transformer": "^0.2.3",
