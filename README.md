@@ -4,7 +4,19 @@
 
 - This project uses NestJs + Postgres
 
-- Admin: hovanvydut@gmail.com - abcdef123A!
+- Admin: hovanvydut@gmail.com - abcdef123A! at route /admin
+
+## 📌How to run app with Docker
+
+```terminal
+git clone https://github.com/hovanvydut/Charity-And-Fundraising-Website.git
+
+cd /Charity-And-Fundraising-Website
+
+docker-compose up -d
+```
+
+And now, let's open [localhost:5000](http://localhost:5000/) on your browser
 
 ### 👉Please visit the _Docker_ branch to see another version intergrated Docker
 

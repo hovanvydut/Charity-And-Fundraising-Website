@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+    web:
+        container_name: "web-charity"
+        build: .
+        ports: 
+            - 5000:3000
+        networks: 
+            - charity_net
+        depends_on: 
+            - postgresdb
+
+    postgresdb:
+        container_name: "postgres-charity"
+        image: postgres:12.7-alpine
+        restart: always
+        environment:
+            POSTGRES_USER: yjcrmgct
+            POSTGRES_PASSWORD: 123123
+            POSTGRES_DB: yjcrmgct
+        volumes: 
+            - ./src/config/dump_postgres:/docker-entrypoint-initdb.d
+        networks: 
+            - charity_net
+
+networks: 
+    charity_net:
+        driver: bridge
+
+        
