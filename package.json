@@ -36,7 +36,7 @@
     "bcrypt": "^5.0.0",
     "cache-manager": "^3.3.0",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.12.2",
+    "class-validator": "^0.14.0",
     "cloudinary": "^1.22.0",
     "connect-flash-plus": "^0.2.1",
     "connect-pg-simple": "^6.1.0",
